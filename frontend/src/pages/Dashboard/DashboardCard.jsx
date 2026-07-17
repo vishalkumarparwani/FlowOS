@@ -1,7 +1,7 @@
 import React from "react";
 
 
-export default function DashboardCards(props) {
+export default function DashboardCard(props) {
 
     const Icon = props.icon
 

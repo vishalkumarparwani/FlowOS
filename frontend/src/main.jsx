@@ -9,6 +9,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
-    <App /></BrowserRouter>
+
+      <App />
+      {/* Duplication is temperory */}
+    </BrowserRouter>
   </React.StrictMode>
 );
