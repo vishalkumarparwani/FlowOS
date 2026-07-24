@@ -1,7 +1,7 @@
 import React from "react";
 import DashboardCard from "./DashboardCard";
 import UpcomingTasks from "./UpcomingTasks";
-import RecentActivity from "./RecentActivity";
+import RecentActivity from "./Pomodoro";
 
 import {
     Plus,

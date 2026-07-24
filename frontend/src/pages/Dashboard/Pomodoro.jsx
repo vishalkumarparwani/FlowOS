@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useEffectEvent } from "react";
+import React, { useState, useEffect } from "react";
 import { Timer, Play, Pause, RotateCcw } from "lucide-react";
 
 export default function Pomodoro() {
 
-    const [minutes, setMinutes] = useState(1)
+    const [minutes, setMinutes] = useState(25)
     const [seconds, setSeconds] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
     const [completedSessions, setCompletedSessions] = useState(0)
@@ -30,13 +30,13 @@ export default function Pomodoro() {
             if(seconds > 0) {
                 setSeconds(seconds - 1);
             }
-            else if(seconds <= 0 && minutes > 0) {
-                setMinutes(minutes - 1);
+            else if(minutes > 0) {
+                setMinutes(prev => prev - 1);
                 setSeconds(59)
-            }
+             }
             else {
                 setIsRunning(false);
-                setCompletedSessions(completedSessions+1);
+                setCompletedSessions(prev => prev + 1);
             }
 
         }, 1000);
@@ -77,13 +77,25 @@ export default function Pomodoro() {
                     
                     <button 
                         onClick={handleStart}
-                        className="p-2 rounded-lg text-white bg-zinc-900 hover:bg-zinc-800 transition-colors active:bg-zinc-600">
+                        disabled={isRunning}
+                        className={`p-2 rounded-lg transition-colors
+                        ${isRunning
+                            ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+                            : "bg-zinc-900 text-white hover:bg-zinc-800"
+                        }`}
+                        >
                         <Play size={18} />
                     </button>
 
                     <button
-                        onClick={handlePause} 
-                        className="p-2 rounded-lg text-white bg-zinc-900 hover:bg-zinc-800 transition-colors active:bg-zinc-600">
+                        onClick={handlePause}
+                        disabled={!isRunning}
+                        className={`p-2 rounded-lg transition-colors
+                        ${!isRunning
+                            ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+                            : "bg-zinc-900 text-white hover:bg-zinc-800"
+                        }`}
+                        >
                         <Pause size={18} />
                     </button>
 
