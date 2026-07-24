@@ -53,7 +53,7 @@ export default function Dashboard() {
     ];
 
     return (
-        <div className="mt-5 px-7 space-y-8 animate-fade-in">
+        <div className="mt-5 px-12 space-y-8 animate-fade-in">
             <div>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>

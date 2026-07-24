@@ -18,7 +18,8 @@ export default function Navbar(props) {
                         type="text"
                         placeholder="Search anything... (Press '/' to search)"
                         className="flex-1 bg-transparent outline-none text-zinc-400"
-                    /></div>
+                    />
+                </div>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
