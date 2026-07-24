@@ -47,17 +47,18 @@ export default function Dashboard() {
 
     const recentTasks = [
         { id: 1, title: "Dashboard completion", projects: "FlowOS v2", done: false, priority: "High" },
-        { id: 2, title: "Routing", projects: "FlowOS v2", done: false, priority: "Medium" },
+        { id: 2, title: "Routing", projects: "FlowOS v2", done: true, priority: "Medium" },
         { id: 3, title: "Task 3", projects: "FlowOS v2", done: false, priority: "Low" },
+        { id: 4, title: "Routing", projects: "TaskSphere", done: false, priority: "" },
     ];
 
     return (
-        <div className="mt-8 space-y-8 animate-fade-in">
+        <div className="mt-5 px-7 space-y-8 animate-fade-in">
             <div>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                            Welcome back, Vishal.
+                            Welcome back, Sarah.
                         </h1>
 
                         <p className="text-sm text-zinc-400 mt-1">
@@ -71,7 +72,7 @@ export default function Dashboard() {
                     </button>
                 </div>
 
-                <div className="flex mt-6 gap-3">
+                <div className="grid mt-6 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat, index) => {
                         return (
                             <DashboardCard
@@ -87,37 +88,40 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="flex">
-                <div className="flex-1 rounded-xl border p-5">
-                    <div className="flex items-center justify-between">
-                        <h1>Upcoming Tasks</h1>
+            <div className="grid gap-6 lg:grid-cols-3">
 
-                        <button className="flex">
+                <div className="rounded-xl border border-zinc-800/50 p-5 lg:col-span-2">
+                    <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
+                        <h3 className="text-sm font-semibold text-zinc-200">
+                            Upcoming Tasks
+                        </h3>
+
+                        <button className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-all">
                             View all tasks
-                            <ArrowUpRight size={16} />
+                            <ArrowUpRight size={12} />
                         </button>
                     </div>
 
-                    <div>
-                        <button>
-                            {recentTasks.map((task) => {
-                                return (
-                                    <UpcomingTasks
-                                        key={task.id}
-                                        title={task.title}
-                                        project={task.prokect}
-                                        done={task.done}
-                                        priority={task.priority}
-                                    />
-                                );
-                            })}
-                        </button>
+                    <div className="mt-4 divide-y divide-zinc-900/40">
+                        {recentTasks.map((task) => {
+                            return (
+                                <UpcomingTasks
+                                    key={task.id}
+                                    title={task.title}
+                                    projects={task.projects}
+                                    done={task.done}
+                                    priority={task.priority}
+                                />
+                            );
+                        })}
                     </div>
-
-
                 </div>
-            </div>
 
+                <div className="h-full">
+                    <RecentActivity />
+                </div>
+
+            </div>
         </div>
     );
 }

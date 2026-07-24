@@ -6,7 +6,7 @@ export default function DashboardCard(props) {
     const Icon = props.icon
 
     return (
-        <div className="flex flex-col w-56 border rounded-xl border-zinc-800 p-6 hover:border-zinc-300 transition-all">
+        <div className="flex flex-col p-6 rounded-xl border border-zinc-800 hover:border-zinc-700 transition-all">
             <div className="flex items-center justify-between gap-3">
                 <span className="text-sm font-medium text-zinc-400">
                     {props.title}
