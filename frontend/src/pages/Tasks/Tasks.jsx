@@ -21,9 +21,16 @@ export default function Tasks() {
     const [priority, setPriority] = useState('');
 
     useEffect(() => {
-        loadTasks();
+        async function fetchData() {
+            try {
+                await loadTasks();
+            } catch(err) {
+                console.error("Failed to load tasks: ", err);
+            }
+        }
+        fetchData()
     }, [])
-    
+
     async function loadTasks() {
         const data = await getTasks();
         setTasks(data);
@@ -32,13 +39,13 @@ export default function Tasks() {
     async function handleCreateTask() {
         if (!title.trim()) return;
 
-        await createTask({title, project, priority, status: 'planning', due_date: null});
+        await createTask({ title, project, priority, status: 'planning', due_date: null });
 
         setTitle('')
         setProject('')
         setPriority('')
         loadTasks()
-        
+
     }
 
     async function handleDeleteTask(task_id) {
@@ -94,31 +101,38 @@ export default function Tasks() {
             </div>
 
             <div className="flex items-center gap-1.5 mb-4 border-b border-zinc-900 pb-3">
-                    <button className="bg-zinc-800 text-zinc-100 border border-zinc-700/60 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
-                        All (12)
-                    </button>
-                    <button className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
-                        Active (8)
-                    </button>
-                    <button className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
-                        Completed (4)
-                    </button>
-                </div>
+                <button className="bg-zinc-800 text-zinc-100 border border-zinc-700/60 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
+                    All (12)
+                </button>
+                <button className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
+                    Active (8)
+                </button>
+                <button className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 text-xs font-medium px-3 py-1.5 rounded-lg transition-all">
+                    Completed (4)
+                </button>
+            </div>
 
             <div className="px-7 rounded-xl border border-zinc-800/80 bg-zinc-900/30 lg:col-span-2">
                 <div className="mt-4 divide-y divide-zinc-900/40">
-                    {tasks.map((task) => {
-                        return (
-                            <TaskRow
-                                key={task.id}
-                                title={task.title}
-                                project={task.project}
-                                priority={task.priority}
-                                dueDate={task.dueDate}
-                                completed={task.completed}
-                            />
-                        );
-                    })}
+                    {tasks.length === 0 ? (
+                        <p className="text-sm tex-zinc-500 text-center py-8 pb-10">
+                            No tasks yet — add one to get started.
+                        </p>
+                    ) : (
+                        tasks.map((task) => {
+                            return (
+                                <TaskRow
+                                    key={task.id}
+                                    title={task.title}
+                                    project={task.project}
+                                    priority={task.priority}
+                                    dueDate={task.dueDate}
+                                    completed={task.completed}
+                                />
+                            );
+                        })
+
+                    )}
                 </div>
             </div>
 
