@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TaskRow from "./TaskRow"
+import { getTasks, createTask, deleteTask } from '../../api'
 
 import {
     Plus,
@@ -14,72 +15,37 @@ import {
 
 export default function Tasks() {
 
-    const TASKS_DATA = [
-        {
-            id: '1',
-            title: 'Refactor Sidebar Layout',
-            project: 'FlowOS Core',
-            priority: 'High',
-            dueDate: 'Today',
-            completed: false
-        },
-        {
-            id: '2',
-            title: 'Implement Pomodoro Logic',
-            project: 'Productivity Module',
-            priority: 'Medium',
-            dueDate: 'Tomorrow',
-            completed: false
-        },
-        {
-            id: '3',
-            title: 'Connect PostgreSQL Repository',
-            project: 'Backend Infrastructure',
-            priority: 'High',
-            dueDate: 'Jul 28',
-            completed: false
-        },
-        {
-            id: '4',
-            title: 'Design Calendar Page',
-            project: 'Design System',
-            priority: 'Low',
-            dueDate: 'Jul 30',
-            completed: false
-        },
-        {
-            id: '5',
-            title: 'Fix Authentication Middleware',
-            project: 'FlowOS Core',
-            priority: 'High',
-            dueDate: 'Jul 22',
-            completed: true
-        },
-        {
-            id: '6',
-            title: 'Deploy FastAPI Backend',
-            project: 'Backend Infrastructure',
-            priority: 'Medium',
-            dueDate: 'Aug 02',
-            completed: false
-        },
-        {
-            id: '7',
-            title: 'Optimize React Rendering',
-            project: 'Performance',
-            priority: 'Low',
-            dueDate: 'Aug 05',
-            completed: false
-        },
-        {
-            id: '8',
-            title: 'Build AI Assistant Chat',
-            project: 'AI Studio',
-            priority: 'High',
-            dueDate: 'Aug 10',
-            completed: false
-        }
-    ];
+    const [tasks, setTasks] = useState([]);
+    const [title, setTitle] = useState('');
+    const [project, setProject] = useState('');
+    const [priority, setPriority] = useState('');
+
+    useEffect(() => {
+        loadTasks();
+    }, [])
+    
+    async function loadTasks() {
+        const data = await getTasks();
+        setTasks(data);
+    }
+
+    async function handleCreateTask() {
+        if (!title.trim()) return;
+
+        await createTask({title, project, priority, status: 'planning', due_date: null});
+
+        setTitle('')
+        setProject('')
+        setPriority('')
+        loadTasks()
+        
+    }
+
+    async function handleDeleteTask(task_id) {
+        await deleteTask(task_id);
+        loadTasks()
+    }
+
 
     return (
         <div className="mt-5 px-12 space-y-8 animate-fade-in">
@@ -141,7 +107,7 @@ export default function Tasks() {
 
             <div className="px-7 rounded-xl border border-zinc-800/80 bg-zinc-900/30 lg:col-span-2">
                 <div className="mt-4 divide-y divide-zinc-900/40">
-                    {TASKS_DATA.map((task) => {
+                    {tasks.map((task) => {
                         return (
                             <TaskRow
                                 key={task.id}

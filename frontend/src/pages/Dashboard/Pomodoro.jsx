@@ -66,8 +66,8 @@ export default function Pomodoro() {
 
             <div className="space-y-3 flex flex-col items-center">
                 <div className="flex flex-col items-center">
-                    <h3 className="text-6xl font-bold">
-                        {minutes} : {seconds.toString().padStart(2, "0")}
+                    <h3 className="text-4xl sm:text-6xl font-bold">
+                        {minutes}:{seconds.toString().padStart(2, "0")}
                     </h3>
                     <p className="mt-2 text-[11px] text-zinc-500">
                         Stay focused on one task
