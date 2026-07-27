@@ -31,17 +31,19 @@ export default function TaskForm({ onSubmit }) {
                 <input
                     type="text"
                     value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder="Task title"
                     className="w-full bg-zinc-900/60 border border-zinc-800/80 rounded-lg py-1.5 pl-9 pr-3 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-700 transition-all cursor-pointer"
                 />
                 <input
                     type="text"
                     value={project}
+                    onChange={(e) => setProject(e.target.value)}
                     placeholder="Project (optional)"
                     className="w-full bg-zinc-900/60 border border-zinc-800/80 rounded-lg py-1.5 pl-9 pr-3 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-700 transition-all cursor-pointer"
                 />
                 <select
-                    value={priority} onChange={(parameter) => setPriority(parameter)}
+                    value={priority} onChange={(e) => setPriority(e.target.value)}
                     className="rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-200"
                 >
                     <option value="Low">Low</option>
@@ -51,6 +53,7 @@ export default function TaskForm({ onSubmit }) {
                 <input
                     type="date"
                     value={due_date}
+                    onChange={(e) => setDueDate(e.target.value)}
                     className="rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-200"
                 />
                 <button
