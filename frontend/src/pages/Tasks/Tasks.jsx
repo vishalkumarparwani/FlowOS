@@ -7,28 +7,24 @@ import {
     Search,
     Filter,
     ArrowUpDown,
-    MoreHorizontal,
-    Check,
-    ClipboardList,
-    ChevronDown
+    X
 } from "lucide-react";
+import TaskForm from './TaskForm';
 
 export default function Tasks() {
 
     const [tasks, setTasks] = useState([]);
-    const [title, setTitle] = useState('');
-    const [project, setProject] = useState('');
-    const [priority, setPriority] = useState('');
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
             try {
                 await loadTasks();
-            } catch(err) {
+            } catch (err) {
                 console.error("Failed to load tasks: ", err);
             }
         }
-        fetchData()
+        fetchData();
     }, [])
 
     async function loadTasks() {
@@ -36,21 +32,15 @@ export default function Tasks() {
         setTasks(data);
     }
 
-    async function handleCreateTask() {
-        if (!title.trim()) return;
-
-        await createTask({ title, project, priority, status: 'planning', due_date: null });
-
-        setTitle('')
-        setProject('')
-        setPriority('')
-        loadTasks()
-
+    async function handleCreateTask(taskData) {
+        await createTask(taskData);
+        loadTasks();
+        setIsFormOpen(false);
     }
 
     async function handleDeleteTask(task_id) {
         await deleteTask(task_id);
-        loadTasks()
+        loadTasks();
     }
 
 
@@ -68,11 +58,26 @@ export default function Tasks() {
                     </p>
                 </div>
 
-                <button className="flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-zinc-200">
-                    <Plus size={16} />
-                    New Task
+                <button
+                    className="flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
+                    onClick={() => setIsFormOpen(!isFormOpen)}>
+                    {isFormOpen ? (
+                        <>
+                            <X size={16} />
+                            Cancel
+                        </>
+                    ) : (
+                        <>
+                            <Plus size={16} />
+                            New Task
+                        </>
+                    )}
                 </button>
             </div>
+                
+            {isFormOpen && (
+                <TaskForm onSubmit={handleCreateTask} />
+            )}
 
             <div className='flex items-center justify-between'>
                 <div className="relative w-full sm:w-80">
