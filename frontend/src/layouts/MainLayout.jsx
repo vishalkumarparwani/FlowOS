@@ -15,13 +15,13 @@ export default function MainLayout() {
             />
             </div>
 
-            <div className="flex-1 mt-2 min-w-0 overflow-y-auto ease-in-out px-6">
+            <div className="flex-1 mt-6 min-w-0 overflow-y-auto ease-in-out px-6">
                 <Navbar
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                 />
 
-                <main className="flex-1 overflow-y-auto p-6">
+                <main className="flex-1 overflow-y-auto p-5 pt-3">
                     <Outlet />
                 </main>
             </div>

@@ -20,7 +20,7 @@ export default function Sidebar(props) {
     return (
         <aside className={`${props.isSidebarOpen ? 'w-64' : 'w-20'}
             transition-all duration-300
-            p-4 h-screen border-r border-zinc-900 flex flex-col justify-between bg-black text-white`}>
+            p-4 sm:mr-5 h-screen border-r border-zinc-900 flex flex-col justify-between bg-black text-white`}>
             <div>
                 <div className="flex items-center justify-between h-14 px-2">
                     <div className="flex items-center gap-2.5">

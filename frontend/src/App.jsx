@@ -4,6 +4,7 @@ import MainLayout from "./layouts/MainLayout";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Tasks from "./pages/Tasks/Tasks";
+import Settings from "./pages/Settings/Settings"
 
 function App() {
   return (
@@ -14,8 +15,8 @@ function App() {
         {/* <Route path="" element={< />} />
         <Route path="" element={< />} />
         <Route path="" element={< />} />
-        <Route path="" element={< />} />
-        <Route path="" element={< />} /> */}
+        <Route path="" element={< />} />*/}
+        <Route path="settings" element={<Settings />} /> 
       </Route>
     </Routes>
   );

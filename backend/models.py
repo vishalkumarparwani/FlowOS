@@ -18,5 +18,6 @@ class Task(Base):
     priority = Column(String, nullable=False)
     due_date = Column(Date)
     status = Column(String, nullable=False, default="planning")
+    completed = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, server_default=func.now())
     user_id = Column(Integer, ForeignKey("users.id"))
