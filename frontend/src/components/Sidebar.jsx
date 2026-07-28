@@ -6,12 +6,16 @@ import {
     Calendar,
     Sparkles,
     Settings,
+    FileText,
+    Folder,
 } from "lucide-react";
 
 export default function Sidebar(props) {
     const navItems = [
         { title: "Dashboard", path: "/", icon: Home },
         { title: "Tasks", path: "/tasks", icon: CheckSquare },
+        { title: "Projects", path: "/projects", icon: Folder },
+        { title: "Notes", path: "/notes", icon: FileText },
         { title: "Calendar", path: "/calendar", icon: Calendar },
         { title: "AI Assistant", path: "/ai", icon: Sparkles },
         { title: "Settings", path: "/settings", icon: Settings },
