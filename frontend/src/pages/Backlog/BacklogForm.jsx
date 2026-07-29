@@ -74,7 +74,7 @@ export default function BacklogForm({ onSubmit, onCancel }) {
           placeholder="Return 429 Too Many Requests when rate limit exceeded&#10;Include X-RateLimit-Remaining header in response"
           value={newItem.acceptanceCriteria}
           onChange={(e) => setNewItem({ ...newItem, acceptanceCriteria: e.target.value })}
-          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 font-mono text-xs"
+          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 font-mono"
         />
       </div>
 

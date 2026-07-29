@@ -5,9 +5,4 @@ body {
   background-color: #09090b;
   color: #f4f4f5;
   font-family: Inter, sans-serif;
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.6);
-    cursor: pointer;
-  }
 }
