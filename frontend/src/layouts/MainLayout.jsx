@@ -1,34 +1,36 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
+import AISidebar from '../components/AISidebar';
 
 export default function MainLayout() {
-    
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isAIOpen, setIsAIOpen] = useState(false);
 
-    return (
-        <div className="flex h-screen bg-zinc-950 text-zinc-100">
-            <div>
-                <Sidebar isSidebarOpen={isSidebarOpen}
-            />
-            </div>
+  return (
+    <div className="flex h-screen bg-zinc-950 text-zinc-100 overflow-hidden">
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-            <div className="flex-1 mt-6 min-w-0 overflow-y-auto ease-in-out px-6">
-                <Navbar
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
-                />
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <Navbar
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          onToggleAI={() => setIsAIOpen(prev => !prev)}
+        />
 
-                <main className="flex-1 overflow-y-auto p-5 pt-3">
-                    <Outlet />
-                </main>
-            </div>
-
-            {/* <aside className="w-80 border-l border-zinc-900 p-6">
-                Ai Assistant
-            </aside> */}
-        </div>
-    );
+        <main className="flex-1 overflow-y-auto p-6">
+          <Outlet />
+        </main>
+        <AISidebar
+          isOpen={isAIOpen}
+          onClose={() => setIsAIOpen(false)}
+        />
+      </div>
+    </div>
+  );
 }

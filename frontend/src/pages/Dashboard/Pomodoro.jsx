@@ -133,3 +133,21 @@ export default function Pomodoro() {
         </div>
     );
 }
+
+
+// export default function Pomodoro() {
+//   return (
+//     <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-5 flex items-center justify-between">
+//       <div className="flex items-center gap-3">
+//         <Clock className="w-5 h-5 text-zinc-400" />
+//         <div>
+//           <p className="text-xs font-semibold text-zinc-200">Sprint Focus Timer</p>
+//           <p className="text-[11px] text-zinc-500">25m Spec Review Block</p>
+//         </div>
+//       </div>
+//       <button className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200 font-mono">
+//         25:00
+//       </button>
+//     </div>
+//   );
+// }

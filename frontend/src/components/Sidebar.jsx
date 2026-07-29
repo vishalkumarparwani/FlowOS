@@ -1,70 +1,104 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
-    Home,
-    CheckSquare,
-    Calendar,
-    Sparkles,
-    Settings,
-    FileText,
-    Folder,
+  LayoutDashboard,
+  ListTodo,
+  FolderKanban,
+  FileText,
+  Wand2,
+  Settings as SettingsIcon,
+  Sparkles,
+  X
 } from "lucide-react";
 
-export default function Sidebar(props) {
-    const navItems = [
-        { title: "Dashboard", path: "/", icon: Home },
-        { title: "Tasks", path: "/tasks", icon: CheckSquare },
-        { title: "Projects", path: "/projects", icon: Folder },
-        { title: "Notes", path: "/notes", icon: FileText },
-        { title: "Calendar", path: "/calendar", icon: Calendar },
-        { title: "AI Assistant", path: "/ai", icon: Sparkles },
-        { title: "Settings", path: "/settings", icon: Settings },
-    ];
+export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
+  const navItems = [
+    { label: "Dashboard", path: "/", icon: LayoutDashboard },
+    { label: "Backlog", path: "/backlog", icon: ListTodo },
+    { label: "Roadmaps", path: "/roadmaps", icon: FolderKanban },
+    { label: "Specs", path: "/specs", icon: FileText },
+    { label: "AI Generator", path: "/generator", icon: Wand2 },
+    { label: "Settings", path: "/settings", icon: SettingsIcon },
+  ];
 
-    return (
-        <aside className={`${props.isSidebarOpen ? 'w-64' : 'w-20'}
-            transition-all duration-300
-            p-4 sm:mr-5 h-screen border-r border-zinc-900 flex flex-col justify-between bg-black text-white`}>
-            <div>
-                <div className="flex items-center justify-between h-14 px-2">
-                    <div className="flex items-center gap-2.5">
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white">
-                            <span className="font-bold text-black text-sm leading-none">F</span>
-                        </div>
-                        {props.isSidebarOpen && (
-                            <span className="font-semibold text-lg tracking-tight leading-none">
-                                FlowOS
-                            </span>
-                        )}
-                    </div>
-                </div>
+  const handleNavClick = () => {
+    if (window.innerWidth < 768 && setIsSidebarOpen) {
+      setIsSidebarOpen(false);
+    }
+  };
 
-                <nav className="mt-6 space-y-1">
-                    {navItems.map((item) => {
-                        const Icon = item.icon;
+  return (
+    <>
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
+        />
+      )}
 
-                        return (
-                            <NavLink
-                                key={item.path}
-                                to={item.path}
-                                className={({ isActive }) =>
-                                    `flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors ${isActive ?
-                                        'bg-zinc-900 text-white' : 'text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200'
-                                    }
-                                `}
-                            >
-                                <Icon size={18} className="shrink-0" />
-
-                                {props.isSidebarOpen && (
-                                    <span
-                                        className="transition-opacity duration-300"
-                                    >{item.title}</span>
-                                )}
-                            </NavLink>
-                        );
-                    })}
-                </nav>
+      <aside
+        className={`
+          fixed md:static inset-y-0 left-0 z-50
+          w-64 bg-zinc-950 border-r border-zinc-800/80
+          flex flex-col justify-between p-4 h-full shrink-0 select-none
+          transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:hidden"}
+        `}
+      >
+        <div className="space-y-6">
+          <div className="flex items-center justify-between px-2 py-1">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-bold shrink-0">
+                <Sparkles className="w-4 h-4 fill-zinc-950" />
+              </div>
+              <div className="overflow-hidden">
+                <h2 className="text-sm font-bold text-zinc-100 tracking-tight truncate">
+                  SpecFlow AI
+                </h2>
+                <p className="text-[10px] text-zinc-500 font-mono truncate">
+                  SPEC-TO-BACKLOG v2.4
+                </p>
+              </div>
             </div>
-        </aside>
-    );
+
+            <button
+              onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
+              className="p-1 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 md:hidden"
+              title="Close sidebar"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <nav className="space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === "/"}
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    `w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all ${isActive
+                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700/80 shadow-sm"
+                      : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent"
+                    }`
+                  }
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="p-3 bg-zinc-900/40 rounded-xl border border-zinc-800/50 space-y-1 text-xs">
+          <p className="text-zinc-300 font-medium truncate">Acme Corp Engineering</p>
+          <p className="text-[11px] text-zinc-500 truncate">Connected to Linear & GitHub</p>
+        </div>
+      </aside>
+    </>
+  );
 }

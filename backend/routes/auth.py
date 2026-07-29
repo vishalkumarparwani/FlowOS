@@ -7,7 +7,6 @@ from auth import hash_password, verify_password, create_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-
 @router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.username == user.username).first()

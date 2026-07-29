@@ -1,30 +1,16 @@
-import React from "react";
+import React from 'react';
 
-
-export default function DashboardCard(props) {
-
-    const Icon = props.icon
-
-    return (
-        <div className="flex flex-col p-6 rounded-xl border border-zinc-800 hover:border-zinc-700 transition-all">
-            <div className="flex items-center justify-between gap-3">
-                <span className="text-sm font-medium text-zinc-400">
-                    {props.title}
-                </span>
-
-                <div className={`h-8 w-8 flex items-center justify-center rounded-lg border p-1.5 border-zinc-700 ${props.iconStyle}`}>
-                    <Icon size={15} />
-                </div>
-            </div>
-
-            <div className="mt-4">
-                <h3 className="text-2xl font-bold hover:translate-x-0.5 duration-300">
-                    {props.value}
-                </h3>
-                <p className="mt-1 text-[11px] text-zinc-500">
-                    {props.description}
-                </p>
-            </div>
-        </div>
-    );
+export default function DashboardCard({ label, value, trend, subtext }) {
+  return (
+    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-5 space-y-2">
+      <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{label}</p>
+      <div className="flex items-baseline justify-between">
+        <span className="text-2xl font-bold text-zinc-100">{value}</span>
+        <span className="text-xs font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded">
+          {trend}
+        </span>
+      </div>
+      <p className="text-xs text-zinc-500">{subtext}</p>
+    </div>
+  );
 }
