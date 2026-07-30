@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
@@ -10,63 +10,16 @@ import Specs from "./pages/Specs/Specs";
 import Generator from "./pages/Generator/Generator";
 import Settings from "./pages/Settings/Settings";
 
-import { INITIAL_BACKLOG } from "./api";
-
 export default function App() {
-    const [backlog, setBacklog] = useState(INITIAL_BACKLOG);
-    const [generatorSeed, setGeneratorSeed] = useState("");
-
-    function handleGenerateFromSpec(snippet) {
-        setGeneratorSeed(snippet);
-    }
-
-    function handleAddToBacklogFromGenerator(item) {
-        setBacklog((prev) => [item, ...prev]);
-    }
-
     return (
         <Routes>
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<Dashboard />} />
-
-                <Route
-                    path="backlog"
-                    element={
-                        <Backlog
-                            backlog={backlog}
-                            setBacklog={setBacklog}
-                        />
-                    }
-                />
-
-                <Route
-                    path="roadmaps"
-                    element={<Roadmaps />}
-                />
-
-                <Route
-                    path="specs"
-                    element={
-                        <Specs
-                            onGenerateFromSpec={handleGenerateFromSpec}
-                        />
-                    }
-                />
-
-                <Route
-                    path="generator"
-                    element={
-                        <Generator
-                            initialInput={generatorSeed}
-                            onAddToBacklog={handleAddToBacklogFromGenerator}
-                        />
-                    }
-                />
-
-                <Route
-                    path="settings"
-                    element={<Settings />}
-                />
+                <Route path="backlog" element={<Backlog />} />
+                <Route path="roadmaps" element={<Roadmaps />} />
+                <Route path="specs" element={<Specs />} />
+                <Route path="generator" element={<Generator />} />
+                <Route path="settings" element={<Settings />} />
             </Route>
         </Routes>
     );

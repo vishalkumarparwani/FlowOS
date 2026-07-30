@@ -1,65 +1,88 @@
-import React from 'react';
-import { CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import React from "react";
+import {
+  Circle,
+  CheckCircle2,
+  Trash2,
+} from "lucide-react";
 
-export default function BacklogRow({ item, onToggleStatus }) {
-  const getComplexityBadge = (c) => {
-    const colors = {
-      S: 'bg-emerald-950/60 text-emerald-400 border-emerald-800/50',
-      M: 'bg-blue-950/60 text-blue-400 border-blue-800/50',
-      L: 'bg-amber-950/60 text-amber-400 border-amber-800/50',
-      XL: 'bg-rose-950/60 text-rose-400 border-rose-800/50'
-    };
-    return (
-      <span className={`text-xs px-2 py-0.5 rounded border font-mono font-semibold ${colors[c] || colors.M}`}>
-        {c}
-      </span>
-    );
-  };
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'done':
-        return <span className="text-xs px-2 py-1 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3 h-3"/> Done</span>;
-      case 'in_progress':
-        return <span className="text-xs px-2 py-1 rounded bg-amber-950/60 text-amber-400 border border-amber-800/50 font-medium flex items-center gap-1.5"><Clock className="w-3 h-3"/> In Progress</span>;
-      default:
-        return <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 border border-zinc-700/50 font-medium flex items-center gap-1.5"><AlertCircle className="w-3 h-3"/> Planning</span>;
-    }
-  };
-
+export default function BacklogRow(props) {
   return (
-    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-5 hover:border-zinc-700/80 transition-all space-y-3">
+    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-5 hover:border-zinc-700 transition-all group">
+
       <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1.5 flex-1">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-zinc-500 font-semibold">{item.id}</span>
-            <span className="text-xs text-zinc-400 px-2 py-0.5 rounded bg-zinc-800/50 border border-zinc-700/40">
-              {item.epic}
-            </span>
-            {getComplexityBadge(item.complexity)}
+
+        <div className="flex gap-4 flex-1 min-w-0">
+
+          <button
+            onClick={props.onToggleComplete}
+            className="mt-0.5 text-zinc-500 hover:text-zinc-300 transition-all"
+          >
+            {props.completed ? (
+              <CheckCircle2 size={18} className="text-emerald-500" />
+            ) : (
+              <Circle size={18} />
+            )}
+          </button>
+
+          <div className="flex-1 min-w-0">
+
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="text-[11px] font-mono text-zinc-500">
+                {props.id}
+              </span>
+
+              <span className="rounded-md border border-zinc-700/50 bg-zinc-800/50 px-2 py-0.5 text-[10px] text-zinc-400">
+                {props.project}
+              </span>
+
+              <span
+                className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold
+                  ${
+                    props.priority === "High"
+                      ? "border-rose-900/40 bg-rose-950/20 text-rose-400"
+                      : props.priority === "Medium"
+                      ? "border-yellow-900/40 bg-yellow-950/20 text-yellow-400"
+                      : "border-emerald-900/40 bg-emerald-950/20 text-emerald-400"
+                  }`}
+              >
+                {props.priority}
+              </span>
+            </div>
+
+            <h3
+              className={`text-base font-semibold ${
+                props.completed
+                  ? "line-through text-zinc-500"
+                  : "text-zinc-100"
+              }`}
+            >
+              {props.title}
+            </h3>
+
+            {props.description && (
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                {props.description}
+              </p>
+            )}
+
           </div>
-          <h3 className="text-base font-semibold text-zinc-100">{item.title}</h3>
         </div>
-        <button onClick={() => onToggleStatus(item.id)} className="cursor-pointer transition-transform active:scale-95">
-          {getStatusBadge(item.status)}
+
+        <button
+          onClick={props.onDelete}
+          className="opacity-0 group-hover:opacity-100 rounded-lg p-2 text-zinc-500 hover:bg-rose-950 hover:text-rose-400 transition-all"
+        >
+          <Trash2 size={17} />
         </button>
+
       </div>
 
-      {item.acceptanceCriteria && item.acceptanceCriteria.length > 0 && (
-        <div className="pt-2 border-t border-zinc-800/40">
-          <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">
-            Technical Acceptance Criteria
-          </p>
-          <ul className="space-y-1">
-            {item.acceptanceCriteria.map((ac, idx) => (
-              <li key={idx} className="text-xs text-zinc-400 flex items-start gap-2">
-                <span className="text-zinc-600 mt-0.5">•</span>
-                <span>{ac}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Leave space here for future progress bars / acceptance criteria */}
+      {/*
+      <div className="mt-4 border-t border-zinc-800 pt-4">
+        Your progress bars or acceptance criteria go here.
+      </div>
+      */}
     </div>
   );
 }
