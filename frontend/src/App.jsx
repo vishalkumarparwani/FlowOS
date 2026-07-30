@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+
 import MainLayout from "./layouts/MainLayout";
 
-// Pages
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Backlog from "./pages/Backlog/Backlog";
 import Roadmaps from "./pages/Roadmaps/Roadmaps";
@@ -10,7 +10,6 @@ import Specs from "./pages/Specs/Specs";
 import Generator from "./pages/Generator/Generator";
 import Settings from "./pages/Settings/Settings";
 
-// Initial mock data
 import { INITIAL_BACKLOG } from "./api";
 
 export default function App() {

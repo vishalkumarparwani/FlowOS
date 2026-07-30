@@ -1,48 +1,49 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
-  LayoutDashboard,
-  ListTodo,
-  FolderKanban,
-  FileText,
-  Wand2,
-  Settings as SettingsIcon,
-  Sparkles,
-  X
+    LayoutDashboard,
+    ListTodo,
+    FolderKanban,
+    FileText,
+    Wand2,
+    Settings as SettingsIcon,
+    Sparkles,
+    X
 } from "lucide-react";
 
-export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
-  const navItems = [
-    { label: "Dashboard", path: "/", icon: LayoutDashboard },
-    { label: "Backlog", path: "/backlog", icon: ListTodo },
-    { label: "Roadmaps", path: "/roadmaps", icon: FolderKanban },
-    { label: "Specs", path: "/specs", icon: FileText },
-    { label: "AI Generator", path: "/generator", icon: Wand2 },
-    { label: "Settings", path: "/settings", icon: SettingsIcon },
-  ];
+export default function Sidebar(props) {
+    const navItems = [
+        { title: "Dashboard", path: "/", icon: LayoutDashboard },
+        { title: "Backlog", path: "/backlog", icon: ListTodo },
+        { title: "Roadmaps", path: "/roadmaps", icon: FolderKanban },
+        { title: "Specs", path: "/specs", icon: FileText },
+        // { title: "Calendar", path: "/calendar", icon: Calendar },
+        { title: "AI Generator", path: "/generator", icon: Wand2 },
+        { title: "Settings", path: "/settings", icon: SettingsIcon },
+    ];
 
-  const handleNavClick = () => {
-    if (window.innerWidth < 768 && setIsSidebarOpen) {
-      setIsSidebarOpen(false);
-    }
-  };
+    const handleNavClick = () => {
+        if(window.innerWidth < 768 && props.setIsSidebarOpen) {
+              setIsSideOpen(false);
+        }
+    };
 
-  return (
-    <>
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-          onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
-        />
-      )}
-
+    return (
+        <>
+            {props.isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+                    onClick={() => props.setIsSideOpen}
+                />
+            )}
+        
       <aside
         className={`
           fixed md:static inset-y-0 left-0 z-50
           w-64 bg-zinc-950 border-r border-zinc-800/80
           flex flex-col justify-between p-4 h-full shrink-0 select-none
           transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:hidden"}
+          ${props.isSidebarOpen ? "translate-x-0" : "-translate-x-full md:hidden"}
         `}
       >
         <div className="space-y-6">
@@ -62,7 +63,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
             </div>
 
             <button
-              onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
+              onClick={() => props.setIsSidebarOpen && props.setIsSidebarOpen(false)}
               className="p-1 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 md:hidden"
               title="Close sidebar"
             >
@@ -87,7 +88,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                   }
                 >
                   <Icon className="w-4 h-4 shrink-0" />
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate">{item.title}</span>
                 </NavLink>
               );
             })}
@@ -99,6 +100,6 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
           <p className="text-[11px] text-zinc-500 truncate">Connected to Linear & GitHub</p>
         </div>
       </aside>
-    </>
-  );
+        </>
+    );
 }
