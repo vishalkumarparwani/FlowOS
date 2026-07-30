@@ -2,135 +2,53 @@ import React, { useState, useEffect } from "react";
 import { Timer, Play, Pause, RotateCcw } from "lucide-react";
 
 export default function Pomodoro() {
+  const [minutes, setMinutes] = useState(25);
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [completedSessions, setCompletedSessions] = useState(0);
 
-    const [minutes, setMinutes] = useState(25)
-    const [seconds, setSeconds] = useState(0)
-    const [isRunning, setIsRunning] = useState(false)
-    const [completedSessions, setCompletedSessions] = useState(0)
+  function handleStart() {
+    setIsRunning(true);
+  }
 
+  function handlePause() {
+    setIsRunning(false);
+  }
 
-    function handleStart() {
-        setIsRunning(true);
-    }
-    function handlePause() {
+  function handleReset() {
+    setMinutes(25);
+    setSeconds(0);
+    setIsRunning(false);
+  }
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const timer = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds((prev) => prev - 1);
+      } else if (minutes > 0) {
+        setMinutes((prev) => prev - 1);
+        setSeconds(59);
+      } else {
         setIsRunning(false);
-    }
-    function handleReset() {
-        setMinutes(25);
-        setSeconds(0);
-        setIsRunning(false);
-    }
+        setCompletedSessions((prev) => prev + 1);
+      }
+    }, 1000);
 
-    useEffect(() => {
-        if(!isRunning) {
-            return;
-        }
+    return () => clearInterval(timer);
+  }, [isRunning, minutes, seconds]);
 
-        const timer = setInterval(() => {
-            if(seconds > 0) {
-                setSeconds(seconds - 1);
-            }
-            else if(minutes > 0) {
-                setMinutes(prev => prev - 1);
-                setSeconds(59)
-             }
-            else {
-                setIsRunning(false);
-                setCompletedSessions(prev => prev + 1);
-            }
-
-        }, 1000);
-
-        return () => {
-            clearInterval(timer);
-        }
-
-    }, [isRunning, minutes, seconds])
-    
-
-
-    return (
-        <div className="h-full rounded-xl border border-zinc-800/50 p-5 space-y-7">
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
-                <div className="flex items-center gap-2">
-                    <Timer className="text-rose-400 w-4 h-4" />
-                    <h3 className="text-sm font-semibold text-zinc-200">
-                        Focus Timer
-                    </h3>
-                </div>
-
-                <span className="text-xs font-semibold text-zinc-400 bg-zinc-800 px-1.5 py-1">
-                    Focus
-                </span>
-            </div>
-
-            <div className="space-y-3 flex flex-col items-center">
-                <div className="flex flex-col items-center">
-                    <h3 className="text-4xl sm:text-6xl font-bold">
-                        {minutes}:{seconds.toString().padStart(2, "0")}
-                    </h3>
-                    <p className="mt-2 text-[11px] text-zinc-500">
-                        Stay focused on one task
-                    </p>
-                </div>
-                <div className="flex gap-3 mt-7 opacity-85">
-                    
-                    <button 
-                        onClick={handleStart}
-                        disabled={isRunning}
-                        className={`p-2 rounded-lg transition-colors
-                        ${isRunning
-                            ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
-                            : "bg-zinc-900 text-white hover:bg-zinc-800"
-                        }`}
-                        >
-                        <Play size={18} />
-                    </button>
-
-                    <button
-                        onClick={handlePause}
-                        disabled={!isRunning}
-                        className={`p-2 rounded-lg transition-colors
-                        ${!isRunning
-                            ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
-                            : "bg-zinc-900 text-white hover:bg-zinc-800"
-                        }`}
-                        >
-                        <Pause size={18} />
-                    </button>
-
-                    <button
-                        onClick={handleReset} 
-                        className="p-2 rounded-lg text-white bg-zinc-900 hover:bg-zinc-800 transition-colors active:bg-zinc-600">
-                        <RotateCcw size={18} />
-                    </button>
-
-                </div>
-            </div>
-
-            <div className="space-y-2 border-t border-zinc-800 pt-4">
-
-                <div className="flex items-center justify-between">
-                    <p className="mt-1 text-xs text-zinc-500">
-                        Completed Sessions
-                    </p>
-                    <span className="text-sm font-semibold text-zinc-100">
-                        {completedSessions}
-                    </span>
-                    
-                    
-                </div>
-                <div className="flex items-center justify-between">
-                    <p className="mt-1 text-xs text-zinc-500">
-                        Focus Time
-                    </p>
-                    <span className="text-sm font-semibold text-zinc-100">
-                        1h 15m
-                    </span>
-                </div>
-
-            </div>
+  return (
+    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6">
+      <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+        <div className="flex items-center gap-2">
+          <Timer className="h-4 w-4 text-indigo-400" />
+          <h3 className="text-sm font-semibold text-zinc-100">
+            Deep Work Session
+          </h3>
         </div>
+<<<<<<< HEAD
     );
 }
 
@@ -151,3 +69,79 @@ export default function Pomodoro() {
 //     </div>
 //   );
 // }
+=======
+
+        <span className="rounded-md border border-indigo-900/40 bg-indigo-950/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-indigo-300">
+          Focus
+        </span>
+      </div>
+
+      <div className="mt-8 flex flex-col items-center">
+        <h2 className="text-6xl font-bold tracking-tight text-zinc-100">
+          {minutes}:{seconds.toString().padStart(2, "0")}
+        </h2>
+
+        <p className="mt-3 text-xs text-zinc-500">
+          Finish your current implementation before switching context.
+        </p>
+
+        <div className="mt-8 flex gap-3">
+          <button
+            onClick={handleStart}
+            disabled={isRunning}
+            className={`rounded-xl p-3 transition-all ${
+              isRunning
+                ? "cursor-not-allowed bg-zinc-800 text-zinc-600"
+                : "bg-zinc-100 text-zinc-950 hover:bg-zinc-200"
+            }`}
+          >
+            <Play size={18} />
+          </button>
+
+          <button
+            onClick={handlePause}
+            disabled={!isRunning}
+            className={`rounded-xl p-3 transition-all ${
+              !isRunning
+                ? "cursor-not-allowed bg-zinc-800 text-zinc-600"
+                : "bg-zinc-900 text-zinc-100 hover:bg-zinc-800"
+            }`}
+          >
+            <Pause size={18} />
+          </button>
+
+          <button
+            onClick={handleReset}
+            className="rounded-xl bg-zinc-900 p-3 text-zinc-100 transition-all hover:bg-zinc-800"
+          >
+            <RotateCcw size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-8 space-y-4 border-t border-zinc-800 pt-5">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-zinc-500">Completed Sessions</span>
+          <span className="text-sm font-semibold text-zinc-100">
+            {completedSessions}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-zinc-500">Today's Focus Time</span>
+          <span className="text-sm font-semibold text-zinc-100">
+            1h 15m
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-zinc-500">Current Goal</span>
+          <span className="text-xs font-medium text-indigo-300">
+            Finish API Design
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+>>>>>>> 8d45267 (feat: redesign dashboard and backlog for SpecFlow AI)

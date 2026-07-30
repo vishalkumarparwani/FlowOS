@@ -13,61 +13,61 @@ import Settings from "./pages/Settings/Settings";
 import { INITIAL_BACKLOG } from "./api";
 
 export default function App() {
-  const [backlog, setBacklog] = useState(INITIAL_BACKLOG);
-  const [generatorSeed, setGeneratorSeed] = useState("");
+    const [backlog, setBacklog] = useState(INITIAL_BACKLOG);
+    const [generatorSeed, setGeneratorSeed] = useState("");
 
-  const handleGenerateFromSpec = (snippet) => {
-    setGeneratorSeed(snippet);
-  };
+    function handleGenerateFromSpec(snippet) {
+        setGeneratorSeed(snippet);
+    }
 
-  const handleAddToBacklogFromGenerator = (item) => {
-    setBacklog((prev) => [item, ...prev]);
-  };
+    function handleAddToBacklogFromGenerator(item) {
+        setBacklog((prev) => [item, ...prev]);
+    }
 
-  return (
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Dashboard />} />
+    return (
+        <Routes>
+            <Route path="/" element={<MainLayout />}>
+                <Route index element={<Dashboard />} />
 
-        <Route
-          path="backlog"
-          element={
-            <Backlog
-              backlog={backlog}
-              setBacklog={setBacklog}
-            />
-          }
-        />
+                <Route
+                    path="backlog"
+                    element={
+                        <Backlog
+                            backlog={backlog}
+                            setBacklog={setBacklog}
+                        />
+                    }
+                />
 
-        <Route
-          path="roadmaps"
-          element={<Roadmaps />}
-        />
+                <Route
+                    path="roadmaps"
+                    element={<Roadmaps />}
+                />
 
-        <Route
-          path="specs"
-          element={
-            <Specs
-              onGenerateFromSpec={handleGenerateFromSpec}
-            />
-          }
-        />
+                <Route
+                    path="specs"
+                    element={
+                        <Specs
+                            onGenerateFromSpec={handleGenerateFromSpec}
+                        />
+                    }
+                />
 
-        <Route
-          path="generator"
-          element={
-            <Generator
-              initialInput={generatorSeed}
-              onAddToBacklog={handleAddToBacklogFromGenerator}
-            />
-          }
-        />
+                <Route
+                    path="generator"
+                    element={
+                        <Generator
+                            initialInput={generatorSeed}
+                            onAddToBacklog={handleAddToBacklogFromGenerator}
+                        />
+                    }
+                />
 
-        <Route
-          path="settings"
-          element={<Settings />}
-        />
-      </Route>
-    </Routes>
-  );
+                <Route
+                    path="settings"
+                    element={<Settings />}
+                />
+            </Route>
+        </Routes>
+    );
 }
