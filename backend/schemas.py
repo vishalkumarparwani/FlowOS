@@ -17,24 +17,24 @@ class UserOut(BaseModel):
 
 class UserThemeUpdate(BaseModel):
     theme: str
-class TaskStatus(str, Enum):
+class BacklogStatus(str, Enum):
     planning = "planning"
     in_progress = "in_progress"
     done = "done"
-class TaskPriority(str, Enum):
+class BacklogPriority(str, Enum):
     high = "High"
     medium = "Medium"
     low = "Low"
 
-class TaskCreate(BaseModel):
+class BacklogCreate(BaseModel):
     title: str
     project: str
-    priority: TaskPriority = TaskPriority.medium
-    status: TaskStatus = TaskStatus.planning
+    priority: BacklogPriority = BacklogPriority.medium
+    status: BacklogStatus = BacklogStatus.planning
     due_date: date | None = None
     completed: bool = False
 
-class TaskUpdate(BaseModel):
+class BacklogUpdate(BaseModel):
         title: str
         description: str
     
@@ -44,7 +44,7 @@ class TaskUpdate(BaseModel):
     
         due_date: date | None
         completed: bool
-class TaskOut(BaseModel):
+class BacklogOut(BaseModel):
     id: int
     title: str
     description: str

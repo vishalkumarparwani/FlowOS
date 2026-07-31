@@ -11,8 +11,8 @@ class User(Base):
 
     theme = Column(String, default="dark")
 
-class Task(Base):
-    __tablename__ = "tasks"
+class Backlog(Base):
+    __tablename__ = "backlog"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
