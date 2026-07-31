@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getTasks, createTask, updateTask, deleteTask } from "../../api";
+import BacklogForm from "./BacklogForm";
+import BacklogRow from "./BacklogRow";
+import { getBacklog, createBacklog, updateBacklog, deleteBacklog } from "../../api";
 import {
   Plus,
   Search,
@@ -9,51 +11,30 @@ import {
   X,
 } from "lucide-react";
 
-import BacklogForm from "./BacklogForm";
-import BacklogRow from "./BacklogRow";
 
-export default function Backlog({ }) {
-
-  const [backlog, setBacklog] = useState([]);
+export default function Backlog({}) {
+  const [backlogItems, setBacklogItems] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
-    loadBacklog();
-  }, [])
+    async function fetchData() {
+      try {
+        await loadBacklog();
+      } catch (err) {
+        console.log("Failed to load backlog items: ", err);
+      }
+    }
+    fetchData();
+  }, []);
 
   async function loadBacklog() {
-    const data = await getTasks();
-    setBacklog(data);
+    const data = await getBacklog();
+    setBacklogItems(data);
   }
 
-  async function handleCreateItem(item) {
-    await createTask(item);
-    await loadBacklog();
-    setIsFormOpen(false);
-  }
-
-  async function handleToggleStatus(item) {
-    let nextStatus = "planning";
-
-    if (item.status === "planning") nextStatus = "in_progress";
-    else if (item.status === "in_progress") nextStatus = "done";
-
-    await updateTask(item.id, {
-      ...item,
-      status: nextStatus,
-    });
-
-    loadBacklog();
-  }
-
-  async function handleDeleteItem(id) {
-    await deleteTask(id);
-    loadBacklog();
-  }
-
-  const filteredItems = backlog
+  const FilteredBacklogsItems = backlogItems
     .filter((item) => {
       if (statusFilter === "planning") return item.status === "planning";
       if (statusFilter === "in_progress") return item.status === "in_progress";
@@ -64,11 +45,40 @@ export default function Backlog({ }) {
       const query = search.toLowerCase();
 
       return (
-        item.title.toLowerCase().includes(query) ||
-        item.id.toLowerCase().includes(query) ||
-        (item.epic || "").toLowerCase().includes(query)
+        (item.title || "").toLowerCase().includes(query) ||
+        String(item.id).includes(query) ||
+        (item.project || "").toLowerCase().includes(query) ||
+        (item.priority || "").toLowerCase().includes(query) ||
+        (item.status || "").toLowerCase().includes(query) ||
+        (item.complexity || "").toLowerCase().includes(query) ||
+        (item.due_date || "").toLowerCase().includes(query)
       );
     });
+
+  async function handleCreateBacklog(item) {
+    await createBacklog(item);
+    await loadBacklog();
+    setIsFormOpen(false);
+  }
+
+  async function handleToggleStatus(item) {
+    let nextStatus = "planning";
+
+    if (item.status === "planning") nextStatus = "in_progress";
+    else if (item.status === "in_progress") nextStatus = "done";
+
+    await updateBacklog(item.id, {
+      ...item,
+      status: nextStatus,
+    });
+
+    loadBacklog();
+  }
+
+  async function handleDeleteBacklogItem(id) {
+    await deleteBacklog(id);
+    loadBacklog();
+  }
 
   return (
     <div className="mt-5 px-12 space-y-8 animate-fade-in">
@@ -101,10 +111,11 @@ export default function Backlog({ }) {
         </button>
       </div>
 
-      {isFormOpen && (
-        <BacklogForm
-          onSubmit={handleCreateItem}
-        />
+      {isFormOpen && 
+        (<BacklogForm 
+            onSubmit={handleCreateBacklog}
+            onCancel={() => setIsFormOpen(false)}  
+          />
       )}
 
       <div className="flex items-center justify-between">
@@ -116,7 +127,7 @@ export default function Backlog({ }) {
 
           <input
             type="text"
-            placeholder="Search backlog..."
+            placeholder="Search tasks, IDs, or keywords..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg border border-zinc-800/80 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-zinc-200 placeholder-zinc-500 outline-none transition-all focus:border-zinc-700"
@@ -139,56 +150,67 @@ export default function Backlog({ }) {
       <div className="flex items-center gap-2 border-b border-zinc-900 pb-3">
         <button
           onClick={() => setStatusFilter("all")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "all"
-            ? "border border-zinc-700 bg-zinc-800 text-white"
-            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-            }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            statusFilter === "all"
+              ? "border border-zinc-700 bg-zinc-800 text-white"
+              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          }`}
         >
-          All ({backlog.length})
+          All ({backlogItems.length})
         </button>
 
         <button
           onClick={() => setStatusFilter("planning")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "planning"
-            ? "border border-zinc-700 bg-zinc-800 text-white"
-            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-            }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            statusFilter === "planning"
+              ? "border border-zinc-700 bg-zinc-800 text-white"
+              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          }`}
         >
-          Planning ({backlog.filter((i) => i.status === "planning").length})
+          Planning ({backlogItems.filter((item) => item.status === "planning").length})
         </button>
 
         <button
           onClick={() => setStatusFilter("in_progress")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "in_progress"
-            ? "border border-zinc-700 bg-zinc-800 text-white"
-            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-            }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            statusFilter === "in_progress"
+              ? "border border-zinc-700 bg-zinc-800 text-white"
+              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          }`}
         >
-          In Progress ({backlog.filter((i) => i.status === "in_progress").length})
+          In Progress ({backlogItems.filter((item) => item.status === "in_progress").length})
         </button>
 
         <button
           onClick={() => setStatusFilter("done")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "done"
-            ? "border border-zinc-700 bg-zinc-800 text-white"
-            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-            }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+            statusFilter === "done"
+              ? "border border-zinc-700 bg-zinc-800 text-white"
+              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+          }`}
         >
-          Done ({backlog.filter((i) => i.status === "done").length})
+          Done ({backlogItems.filter((item) => item.status === "done").length})
         </button>
       </div>
 
+      {statusFilter === "done" && (
+        <div className="rounded-lg border border-emerald-900/40 bg-emerald-950/20 px-4 py-2.5 text-xs text-emerald-400 flex items-center gap-2">
+          <span>All completed items are moved to done for status tracking.</span>
+        </div>
+      )}
+
       <div className="space-y-3">
-        {filteredItems.length === 0 ? (
+        {FilteredBacklogsItems.length === 0 ? (
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 py-12 text-center text-sm text-zinc-500">
-            No backlog items found.
+            Your backlog is empty. Generate items from a spec to get started.
           </div>
         ) : (
-          filteredItems.map((item) => (
+          FilteredBacklogsItems.map((item) => (
             <BacklogRow
               key={item.id}
               item={item}
               onToggleStatus={() => handleToggleStatus(item)}
+              onDelete={() => handleDeleteBacklogItem(item.id)}
             />
           ))
         )}

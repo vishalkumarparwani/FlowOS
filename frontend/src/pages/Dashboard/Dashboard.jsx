@@ -29,7 +29,7 @@ export default function Dashboard() {
       iconStyle: "text-violet-400 bg-violet-950/50",
     },
     {
-      title: "Active Epics",
+      title: "Active Roadmaps",
       value: "8",
       description: "124 engineering tasks",
       icon: GitBranch,

@@ -12,11 +12,10 @@ class User(Base):
     theme = Column(String, default="dark")
 
 class Backlog(Base):
-    __tablename__ = "backlog"
+    __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
-    description = Column(String, nullable=True)
 
     project = Column(String, nullable=False)
     priority = Column(String, nullable=False)
@@ -24,7 +23,9 @@ class Backlog(Base):
     due_date = Column(Date)
     status = Column(String, nullable=False, default="planning")
     completed = Column(Boolean, nullable=False, default=False)
+    complexity = Column(String, nullable=True, default="M")
+    acceptance_criteria = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 
     user_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("user")
+    owner = relationship("User")

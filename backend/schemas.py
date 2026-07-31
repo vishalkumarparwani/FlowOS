@@ -26,36 +26,41 @@ class BacklogPriority(str, Enum):
     medium = "Medium"
     low = "Low"
 
+class BacklogComplexity(str, Enum):
+    XL = "XL"
+    L = "L"
+    M = "M"
+    S = "S"
+
 class BacklogCreate(BaseModel):
     title: str
     project: str
     priority: BacklogPriority = BacklogPriority.medium
     status: BacklogStatus = BacklogStatus.planning
     due_date: date | None = None
-    completed: bool = False
+    complexity: BacklogComplexity = BacklogComplexity.M
+    acceptance_criteria: str | None = None
+
 
 class BacklogUpdate(BaseModel):
-        title: str
-        description: str
-    
-        project: str
-        priority: str
-        status: str
-    
-        due_date: date | None
-        completed: bool
-class BacklogOut(BaseModel):
-    id: int
     title: str
-    description: str
-
     project: str
     priority: str
     status: str
-
     due_date: date | None
-    completed: bool
+    complexity: str | None = None
+    acceptance_criteria: str | None = None
 
+
+class BacklogOut(BaseModel):
+    id: int
+    title: str
+    project: str
+    priority: str
+    status: str
+    due_date: date | None
+    complexity: str | None = None
+    acceptance_criteria: str | None = None
     created_at: datetime
     user_id: int | None
 

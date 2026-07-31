@@ -1,0 +1,62 @@
+1-Role personalization -> {
+    
+Startup Founder
+Technical PM (TPM)
+AI / Software Engineer
+DevOps / Platform Engineer
+Student / Junior Dev
+}
+
+
+2-Token Optimization
+
+
+
+3-Agent-Ready Export -> {
+Export for AI Coding Agents" button. 
+This formats generated tasks into strict 
+markdown rule files (.cursorrules or AGENTPROMPT.md) 
+with explicit file-path targets, DB migration 
+steps, and unit test criteria.
+}
+
+
+
+4-DAG
+
+
+5-Inline "Diff & Patch" AI Editor -> {
+When a user wants to tweak a generated task 
+(e.g., "Add Redis caching to this acceptance criteria"), 
+don't regenerate the whole task. Show a Git-style split 
+diff (Red/Green lines) showing exactly what the AI 
+modified in the criteria.
+
+Why it's Top 1%: It gives users total control and 
+confidence over AI output rather than treating the 
+LLM as a black box.
+}
+
+
+6-Native MCP (Model Context Protocol) Server
+
+
+7-AI Backlog Grooming & Duplicate Detection Engine
+
+
+8-Synthetic QA "Stress Tester" (Adversarial Red-Teaming)
+
+
+9-LLM & Engineering Cost Predictor -> {
+
+Estimated developer hours
+
+Expected AI agent token consumption
+
+Monthly API infrastructure costs for the feature
+
+}
+
+-------------  0.1% Features  ---------------
+
+10-Multi-Model Adversarial Debate Protocol

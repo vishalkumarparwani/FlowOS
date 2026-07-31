@@ -1,88 +1,153 @@
 import React from "react";
 import {
-  Circle,
+  Clock,
+  CircleDot,
   CheckCircle2,
   Trash2,
+  Pencil,
+  ChevronRight,
 } from "lucide-react";
 
-export default function BacklogRow(props) {
+const statusConfig = {
+  in_progress: {
+    label: "In Progress",
+    color:
+      "text-amber-400 border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20",
+    icon: Clock,
+  },
+  planning: {
+    label: "Planning",
+    color:
+      "text-zinc-300 border-zinc-700/60 bg-zinc-800/40 hover:bg-zinc-800/80",
+    icon: CircleDot,
+  },
+  done: {
+    label: "Done",
+    color:
+      "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20",
+    icon: CheckCircle2,
+  },
+};
+
+const complexityConfig = {
+  "S": {
+    label: "S",
+    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
+  },
+  "M": {
+    label: "M",
+    color: "text-indigo-400 border-indigo-500/20 bg-indigo-500/10",
+  },
+  "L": {
+    label: "L",
+    color: "text-amber-400 border-amber-500/20 bg-amber-500/10",
+  },
+  "XL": {
+    label: "XL",
+    color: "text-rose-400 border-rose-500/20 bg-rose-500/10",
+  },
+};
+
+export default function BacklogRow({
+  item,
+  onToggleStatus,
+  onEdit,
+  onDelete, 
+}) {
+  const status = statusConfig[item.status] || statusConfig.planning;
+  const StatusIcon = status.icon;
+  const complexity = complexityConfig[item.complexity] || {
+    label: "M",
+    color: "text-indigo-400 border-indigo-500/20 bg-indigo-500/10",
+  }
+  const criteriaList = (item.acceptance_criteria || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+
   return (
-    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-5 hover:border-zinc-700 transition-all group">
+    <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-xl hover:shadow-black/40">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="cursor-pointer font-mono text-[11px] font-semibold text-zinc-400 transition-colors hover:text-zinc-200">
+            BACK-{item.id}
+          </span>
 
-      <div className="flex items-start justify-between gap-4">
+          <span className="select-none text-zinc-700">•</span>
 
-        <div className="flex gap-4 flex-1 min-w-0">
+          <span className="wrap-anywhere rounded-md border border-zinc-800 bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] font-medium text-zinc-400">
+            {item.project}
+          </span>
 
-          <button
-            onClick={props.onToggleComplete}
-            className="mt-0.5 text-zinc-500 hover:text-zinc-300 transition-all"
+          <span
+            className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${complexity.color}`}
           >
-            {props.completed ? (
-              <CheckCircle2 size={18} className="text-emerald-500" />
-            ) : (
-              <Circle size={18} />
-            )}
-          </button>
-
-          <div className="flex-1 min-w-0">
-
-            <div className="flex items-center gap-2 flex-wrap mb-2">
-              <span className="text-[11px] font-mono text-zinc-500">
-                {props.id}
-              </span>
-
-              <span className="rounded-md border border-zinc-700/50 bg-zinc-800/50 px-2 py-0.5 text-[10px] text-zinc-400">
-                {props.project}
-              </span>
-
-              <span
-                className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold
-                  ${
-                    props.priority === "High"
-                      ? "border-rose-900/40 bg-rose-950/20 text-rose-400"
-                      : props.priority === "Medium"
-                      ? "border-yellow-900/40 bg-yellow-950/20 text-yellow-400"
-                      : "border-emerald-900/40 bg-emerald-950/20 text-emerald-400"
-                  }`}
-              >
-                {props.priority}
-              </span>
-            </div>
-
-            <h3
-              className={`text-base font-semibold ${
-                props.completed
-                  ? "line-through text-zinc-500"
-                  : "text-zinc-100"
-              }`}
-            >
-              {props.title}
-            </h3>
-
-            {props.description && (
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                {props.description}
-              </p>
-            )}
-
-          </div>
+            {complexity.label}
+          </span>
         </div>
 
-        <button
-          onClick={props.onDelete}
-          className="opacity-0 group-hover:opacity-100 rounded-lg p-2 text-zinc-500 hover:bg-rose-950 hover:text-rose-400 transition-all"
-        >
-          <Trash2 size={17} />
-        </button>
+        <div className="flex items-center">
+          <div className="flex max-w-0 items-center overflow-hidden opacity-0 transition-all duration-200 ease-in-out group-hover:mr-2 group-hover:max-w-xs group-hover:opacity-100 focus-within:mr-2 focus-within:max-w-xs focus-within:opacity-100">
+            <div className="flex items-center gap-0.5 rounded-lg border border-zinc-800 bg-zinc-950/80 p-0.5">
+              <button
+                onClick={onEdit}
+                title="Edit item"
+                aria-label="Edit item"
+                className="flex h-6 w-6 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+              >
+                <Pencil size={12} />
+              </button>
 
+              <div className="h-3 w-px bg-zinc-800" />
+
+              <button
+                onClick={onDelete}
+                title="Delete item"
+                aria-label="Delete item"
+                className="flex h-6 w-6 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-rose-950/60 hover:text-rose-400 focus:outline-none focus:ring-1 focus:ring-rose-500/50"
+              >
+                <Trash2 size={12} />
+              </button>
+            </div>
+          </div>
+
+          <button
+            onClick={onToggleStatus}
+            className={`flex shrink-0 items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10px] font-medium transition-all ${status.color}`}
+          >
+            <StatusIcon size={11} />
+            {status.label}
+          </button>
+        </div>
       </div>
 
-      {/* Leave space here for future progress bars / acceptance criteria */}
-      {/*
-      <div className="mt-4 border-t border-zinc-800 pt-4">
-        Your progress bars or acceptance criteria go here.
-      </div>
-      */}
+      <h3 className="wrap-anywhere  mt-3 text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
+        {item.title}
+      </h3>
+
+      {criteriaList.length > 0 && (
+        <div className="mt-3.5 border-t border-zinc-800/50 pt-3">
+          <div className="flex items-center mb-1.5 gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+            <span>Technical Acceptance Criteria</span>
+          </div>
+
+          <ul className="mt-2 space-y-1.5">
+            {criteriaList.map((line, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-2 text-xs leading-relaxed text-zinc-400"
+              >
+                <ChevronRight
+                  size={12}
+                  className="mt-0.5 shrink-0 text-zinc-600"
+                />
+                <span className="wrap-anywhere">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
