@@ -77,7 +77,6 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto mt-6 max-w-7xl space-y-8 px-8 xl:px-12">
-      {/* Header */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-100">
@@ -97,8 +96,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* AI Banner */}
-      <div className="flex items-start gap-4 rounded-2xl border border-indigo-900/40 bg-gradient-to-r from-indigo-950/40 via-zinc-900 to-zinc-900 p-6">
+      <div className="flex items-start gap-4 rounded-2xl border border-indigo-900/40 bg-linear-to-r from-indigo-950/40 via-zinc-900 to-zinc-900 p-6">
         <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
           <BrainCircuit size={22} />
         </div>
@@ -118,7 +116,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat, index) => (
           <DashboardCard
@@ -132,9 +129,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Main Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left */}
         <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-zinc-800 pb-5">
             <div>
@@ -167,7 +162,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Right */}
         <div>
           <Pomodoro />
         </div>

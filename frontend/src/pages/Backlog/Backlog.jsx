@@ -12,11 +12,12 @@ import {
 } from "lucide-react";
 
 
-export default function Backlog({}) {
+export default function Backlog({ }) {
   const [backlogItems, setBacklogItems] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -61,6 +62,19 @@ export default function Backlog({}) {
     setIsFormOpen(false);
   }
 
+  async function handleUpdateBacklogItem(item) {
+    if (!item.title.trim()) return;
+
+    await updateBacklog(item.id, item);
+    await loadBacklog();
+    setEditingItem(null);
+  }
+
+  async function handleDeleteBacklogItem(id) {
+    await deleteBacklog(id);
+    await loadBacklog();
+  }
+
   async function handleToggleStatus(item) {
     let nextStatus = "planning";
 
@@ -72,16 +86,11 @@ export default function Backlog({}) {
       status: nextStatus,
     });
 
-    loadBacklog();
-  }
-
-  async function handleDeleteBacklogItem(id) {
-    await deleteBacklog(id);
-    loadBacklog();
+    await loadBacklog();
   }
 
   return (
-    <div className="mt-5 px-12 space-y-8 animate-fade-in">
+    <div className="mx-auto mt-6 max-w-7xl space-y-8 px-8 xl:px-12">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
@@ -111,12 +120,12 @@ export default function Backlog({}) {
         </button>
       </div>
 
-      {isFormOpen && 
-        (<BacklogForm 
-            onSubmit={handleCreateBacklog}
-            onCancel={() => setIsFormOpen(false)}  
-          />
-      )}
+      {isFormOpen &&
+        (<BacklogForm
+          onSubmit={handleCreateBacklog}
+          onCancel={() => setIsFormOpen(false)}
+        />
+        )}
 
       <div className="flex items-center justify-between">
         <div className="relative w-full sm:w-80">
@@ -150,44 +159,40 @@ export default function Backlog({}) {
       <div className="flex items-center gap-2 border-b border-zinc-900 pb-3">
         <button
           onClick={() => setStatusFilter("all")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            statusFilter === "all"
-              ? "border border-zinc-700 bg-zinc-800 text-white"
-              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-          }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "all"
+            ? "border border-zinc-700 bg-zinc-800 text-white"
+            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+            }`}
         >
           All ({backlogItems.length})
         </button>
 
         <button
           onClick={() => setStatusFilter("planning")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            statusFilter === "planning"
-              ? "border border-zinc-700 bg-zinc-800 text-white"
-              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-          }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "planning"
+            ? "border border-zinc-700 bg-zinc-800 text-white"
+            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+            }`}
         >
           Planning ({backlogItems.filter((item) => item.status === "planning").length})
         </button>
 
         <button
           onClick={() => setStatusFilter("in_progress")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            statusFilter === "in_progress"
-              ? "border border-zinc-700 bg-zinc-800 text-white"
-              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-          }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "in_progress"
+            ? "border border-zinc-700 bg-zinc-800 text-white"
+            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+            }`}
         >
           In Progress ({backlogItems.filter((item) => item.status === "in_progress").length})
         </button>
 
         <button
           onClick={() => setStatusFilter("done")}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            statusFilter === "done"
-              ? "border border-zinc-700 bg-zinc-800 text-white"
-              : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
-          }`}
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === "done"
+            ? "border border-zinc-700 bg-zinc-800 text-white"
+            : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200"
+            }`}
         >
           Done ({backlogItems.filter((item) => item.status === "done").length})
         </button>
@@ -206,12 +211,22 @@ export default function Backlog({}) {
           </div>
         ) : (
           FilteredBacklogsItems.map((item) => (
-            <BacklogRow
-              key={item.id}
-              item={item}
-              onToggleStatus={() => handleToggleStatus(item)}
-              onDelete={() => handleDeleteBacklogItem(item.id)}
-            />
+            item.id === editingItem?.id ? (
+              <BacklogForm
+                key={item.id}
+                initialValues={item}
+                onSubmit={handleUpdateBacklogItem}
+                onCancel={() => setEditingItem(null)}
+              />
+            ) : (
+              <BacklogRow
+                key={item.id}
+                item={item}
+                onEdit={() => setEditingItem(item)}
+                onToggleStatus={() => handleToggleStatus(item)}
+                onDelete={() => handleDeleteBacklogItem(item.id)}
+              />
+            )
           ))
         )}
       </div>

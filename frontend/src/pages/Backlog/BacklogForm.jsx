@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function TaskForm({ onSubmit, onCancel }) {
+const emptyForm = {
+    title: "",
+    project: "",
+    due_date: "",
+    complexity: "M",
+    acceptance_criteria: "",
+};
 
-    const [title, setTitle] = useState('');
-    const [project, setProject] = useState('');
-    const [due_date, setDueDate] = useState('');
-    const [complexity, setComplexity] = useState('M');
-    const [acceptanceCriteria, setAcceptanceCriteria] = useState('');
+export default function TaskForm({ initialValues, onSubmit, onCancel }) {
+
+    const [formData, setFormData] = useState(emptyForm);
+
+    useEffect(() => {
+        if (initialValues) {
+            setFormData(initialValues);
+        }
+    }, [initialValues])
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (!title.trim()) return;
+        if (!formData.title.trim()) return;
 
         onSubmit({
-            title,
-            project,
-            priority: 'Medium',
-            status: 'planning',
-            due_date: due_date || null,
-            complexity,
-            acceptance_criteria: acceptanceCriteria,
+            ...formData,
+            priority: formData.priority || "Medium",
+            status: formData.status || "planning",
+            due_date: formData.due_date || null,
         });
-
-        setTitle('');
-        setProject('');
-        setDueDate('');
-        setComplexity('M');
-        setAcceptanceCriteria('');
     }
 
     return (
@@ -35,7 +36,7 @@ export default function TaskForm({ onSubmit, onCancel }) {
             className="space-y-5 bg-zinc-900/60 border border-zinc-800 rounded-xl p-5"
         >
             <h3 className="text-sm font-semibold text-zinc-100">
-                Quick Backlog Entry
+                {initialValues ? "Edit Backlog Item" : "Quick Backlog Entry"}
             </h3>
 
             <div className="space-y-1.5">
@@ -45,8 +46,8 @@ export default function TaskForm({ onSubmit, onCancel }) {
                 <input
                     type="text"
                     placeholder="e.g. Implement Redis Rate Limiter Middleware"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
                 />
             </div>
@@ -58,8 +59,8 @@ export default function TaskForm({ onSubmit, onCancel }) {
                 <input
                     type="text"
                     placeholder="e.g. FlowOS"
-                    value={project}
-                    onChange={(e) => setProject(e.target.value)}
+                    value={formData.project}
+                    onChange={(e) => setFormData({...formData, project: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
                 />
             </div>
@@ -69,8 +70,8 @@ export default function TaskForm({ onSubmit, onCancel }) {
                     Complexity
                 </label>
                 <select
-                    value={complexity}
-                    onChange={(e) => setComplexity(e.target.value)}
+                    value={formData.complexity}
+                    onChange={(e) => setFormData({...formData, complexity: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600"
                 >
                     <option value="S">S - Small (1-2 pts)</option>
@@ -86,8 +87,8 @@ export default function TaskForm({ onSubmit, onCancel }) {
                 </label>
                 <input
                     type="date"
-                    value={due_date}
-                    onChange={(e) => setDueDate(e.target.value)}
+                    value={formData.due_date}
+                    onChange={(e) => setFormData({...formData, due_date: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600"
                 />
             </div>
@@ -99,8 +100,8 @@ export default function TaskForm({ onSubmit, onCancel }) {
                 <textarea
                     rows={3}
                     placeholder={"Return 429 Too Many Requests when rate limit exceeded\nInclude X-RateLimit-Remaining header in response"}
-                    value={acceptanceCriteria}
-                    onChange={(e) => setAcceptanceCriteria(e.target.value)}
+                    value={formData.acceptance_criteria}
+                    onChange={(e) => setFormData({...formData, acceptance_criteria: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 font-mono resize-y"
                 />
             </div>
@@ -118,7 +119,7 @@ export default function TaskForm({ onSubmit, onCancel }) {
                     type="submit"
                     className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
-                    Add to Backlog
+                    {initialValues ? "Save Changes" : "Add to Backlog"}
                 </button>
             </div>
         </form>
