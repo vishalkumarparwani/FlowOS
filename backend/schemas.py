@@ -9,7 +9,6 @@ class UserCreate(BaseModel):
 class UserOut(BaseModel):
     id: int
     email: EmailStr
-    password: str
     theme: str
 
     class Config:
@@ -17,52 +16,70 @@ class UserOut(BaseModel):
 
 class UserThemeUpdate(BaseModel):
     theme: str
-class BacklogStatus(str, Enum):
+class IssueStatus(str, Enum):
     planning = "planning"
     in_progress = "in_progress"
     done = "done"
-class BacklogPriority(str, Enum):
+class IssuePriority(str, Enum):
     high = "High"
     medium = "Medium"
     low = "Low"
 
-class BacklogComplexity(str, Enum):
-    XL = "XL"
-    L = "L"
-    M = "M"
-    S = "S"
+class IssueSeverity(str, Enum):
+    P1 = "P1"
+    P2 = "P2"
+    P3 = "P3"
+    P4 = "P4"
 
-class BacklogCreate(BaseModel):
+class IssueCreate(BaseModel):
     title: str
-    project: str
-    priority: BacklogPriority = BacklogPriority.medium
-    status: BacklogStatus = BacklogStatus.planning
+    component: str
+    priority: IssuePriority = IssuePriority.medium
+    status: IssueStatus = IssueStatus.planning
     due_date: date | None = None
-    complexity: BacklogComplexity = BacklogComplexity.M
-    acceptance_criteria: str | None = None
+    severity: IssueSeverity = IssueSeverity.P3
+    reproduction_steps: str | None = None
 
 
-class BacklogUpdate(BaseModel):
+class IssueUpdate(BaseModel):
     title: str
-    project: str
+    component: str
     priority: str
     status: str
     due_date: date | None
-    complexity: str | None = None
-    acceptance_criteria: str | None = None
+    severity: str | None = None
+    reproduction_steps: str | None = None
 
 
-class BacklogOut(BaseModel):
+class IssueOut(BaseModel):
     id: int
     title: str
-    project: str
+    component: str
     priority: str
     status: str
     due_date: date | None
-    complexity: str | None = None
-    acceptance_criteria: str | None = None
+    severity: str | None = None
+    reproduction_steps: str | None = None
     created_at: datetime
     user_id: int | None
 
     class Config:
         from_attributes = True
+
+
+# class DashboardStats(BaseModel):
+#     total_tasks: int
+#     completed_tasks: int
+#     active_tasks: int
+#     active_projects: int 
+
+# class UpcomingTask(BaseModel):
+#     id: int
+#     title: str
+#     project: str | None = None
+#     priority: str
+#     status: str
+
+# class DashboardResponse(BaseModel):
+#     stats: DashboardStats
+#     upcoming_tasks: list[UpcomingTask]

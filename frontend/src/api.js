@@ -1,6 +1,6 @@
 const BASE_URL = "http://127.0.0.1:8000";
 
-export async function getBacklog() {
+export async function getIssues() {
     const response = await fetch(`${BASE_URL}/tasks/`);
     if (!response.ok) {
         throw new Error(`Failed to fetch backlog: ${response.status}`);
@@ -8,7 +8,7 @@ export async function getBacklog() {
     return response.json();
 }
 
-export async function createBacklog(item_data) {
+export async function createIssue(item_data) {
     const response = await fetch(`${BASE_URL}/tasks/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,7 +20,7 @@ export async function createBacklog(item_data) {
     return response.json();
 }
 
-export async function updateBacklog(item_id, item_data) {
+export async function updateIssue(item_id, item_data) {
     const response = await fetch(`${BASE_URL}/tasks/${item_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -34,7 +34,7 @@ export async function updateBacklog(item_id, item_data) {
     return response.json();
 }
 
-export async function deleteBacklog(item_id) {
+export async function deleteIssue(item_id) {
     const response = await fetch(`${BASE_URL}/tasks/${item_id}`, { 
         method: "DELETE" 
     });

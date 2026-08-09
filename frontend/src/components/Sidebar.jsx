@@ -14,17 +14,17 @@ import {
 export default function Sidebar(props) {
     const navItems = [
         { title: "Dashboard", path: "/", icon: LayoutDashboard },
-        { title: "Backlog", path: "/backlog", icon: ListTodo },
-        { title: "Roadmaps", path: "/roadmaps", icon: FolderKanban },
-        { title: "Specs", path: "/specs", icon: FileText },
+        { title: "Issues", path: "/issues", icon: ListTodo },
+        { title: "Services", path: "/services", icon: FolderKanban },
+        // { title: "Specs", path: "/specs", icon: FileText },
         // { title: "Calendar", path: "/calendar", icon: Calendar },
-        { title: "AI Generator", path: "/generator", icon: Wand2 },
+        { title: "Triage", path: "/triage", icon: Wand2 },
         { title: "Settings", path: "/settings", icon: SettingsIcon },
     ];
 
     const handleNavClick = () => {
         if(window.innerWidth < 768 && props.setIsSidebarOpen) {
-              setIsSideOpen(false);
+              props.setIsSideOpen(false);
         }
     };
 
@@ -54,10 +54,10 @@ export default function Sidebar(props) {
               </div>
               <div className="overflow-hidden">
                 <h2 className="text-sm font-bold text-zinc-100 tracking-tight truncate">
-                  SpecFlow AI
+                    Sentinel
                 </h2>
                 <p className="text-[10px] text-zinc-500 font-mono truncate">
-                  SPEC-TO-BACKLOG v2.4
+                  SERVICE-TO-ISSUE v2.2
                 </p>
               </div>
             </div>

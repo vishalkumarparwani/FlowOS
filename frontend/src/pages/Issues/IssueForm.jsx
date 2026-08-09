@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 const emptyForm = {
     title: "",
-    project: "",
+    component: "",
     due_date: "",
-    complexity: "M",
-    acceptance_criteria: "",
+    severity: "P3",
+    reproduction_steps: "",
 };
 
-export default function TaskForm({ initialValues, onSubmit, onCancel }) {
+export default function IssueForm({ initialValues, onSubmit, onCancel }) {
 
     const [formData, setFormData] = useState(emptyForm);
 
@@ -36,16 +36,16 @@ export default function TaskForm({ initialValues, onSubmit, onCancel }) {
             className="space-y-5 bg-zinc-900/60 border border-zinc-800 rounded-xl p-5"
         >
             <h3 className="text-sm font-semibold text-zinc-100">
-                {initialValues ? "Edit Backlog Item" : "Quick Backlog Entry"}
+                {initialValues ? "Edit Issue" : "Report New Issue"}
             </h3>
 
             <div className="space-y-1.5">
                 <label className="text-xs font-medium text-indigo-400">
-                    Task Title
+                    Issue Title
                 </label>
                 <input
                     type="text"
-                    placeholder="e.g. Implement Redis Rate Limiter Middleware"
+                    placeholder="e.g. App crashes when uploading large files"
                     value={formData.title}
                     onChange={(e) => setFormData({...formData, title: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
@@ -54,30 +54,30 @@ export default function TaskForm({ initialValues, onSubmit, onCancel }) {
 
             <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">
-                    Project
+                    Component
                 </label>
                 <input
                     type="text"
-                    placeholder="e.g. FlowOS"
-                    value={formData.project}
-                    onChange={(e) => setFormData({...formData, project: e.target.value,})}
+                    placeholder="e.g. Checkout flow"
+                    value={formData.component}
+                    onChange={(e) => setFormData({...formData, component: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
                 />
             </div>
 
             <div className="space-y-1.5">
                 <label className="text-xs font-medium text-indigo-400">
-                    Complexity
+                    Severity
                 </label>
                 <select
-                    value={formData.complexity}
-                    onChange={(e) => setFormData({...formData, complexity: e.target.value,})}
+                    value={formData.severity}
+                    onChange={(e) => setFormData({...formData, severity: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600"
                 >
-                    <option value="S">S - Small (1-2 pts)</option>
-                    <option value="M">M - Medium (3-5 pts)</option>
-                    <option value="L">L - Large (6-8 pts)</option>
-                    <option value="XL">XL - Extra Large (13+ pts)</option>
+                    <option value="P1">P1 - Critical</option>
+                    <option value="P2">P2 - High</option>
+                    <option value="P3">P3 - Medium</option>
+                    <option value="P4">P4 - Low</option>
                 </select>
             </div>
 
@@ -95,13 +95,13 @@ export default function TaskForm({ initialValues, onSubmit, onCancel }) {
 
             <div className="space-y-1.5">
                 <label className="text-xs font-medium text-indigo-400">
-                    Acceptance Criteria (One per line)
+                    Reproduction Steps (One per line)
                 </label>
                 <textarea
                     rows={3}
-                    placeholder={"Return 429 Too Many Requests when rate limit exceeded\nInclude X-RateLimit-Remaining header in response"}
-                    value={formData.acceptance_criteria}
-                    onChange={(e) => setFormData({...formData, acceptance_criteria: e.target.value,})}
+                    placeholder={"Upload a file over 500MB\nSwitch tabs mid-upload\nApp becomes unresponsive"}
+                    value={formData.reproduction_steps}
+                    onChange={(e) => setFormData({...formData, reproduction_steps: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600 font-mono resize-y"
                 />
             </div>
@@ -119,7 +119,7 @@ export default function TaskForm({ initialValues, onSubmit, onCancel }) {
                     type="submit"
                     className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
-                    {initialValues ? "Save Changes" : "Add to Backlog"}
+                    {initialValues ? "Save Changes" : "Add Issue"}
                 </button>
             </div>
         </form>

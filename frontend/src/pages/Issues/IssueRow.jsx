@@ -11,79 +11,75 @@ import {
 const statusConfig = {
   in_progress: {
     label: "In Progress",
-    color:
-      "text-amber-400 border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20",
+    color: "text-amber-400 border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20",
     icon: Clock,
   },
   planning: {
     label: "Planning",
-    color:
-      "text-zinc-300 border-zinc-700/60 bg-zinc-800/40 hover:bg-zinc-800/80",
+    color: "text-zinc-300 border-zinc-700/60 bg-zinc-800/40 hover:bg-zinc-800/80",
     icon: CircleDot,
   },
   done: {
     label: "Done",
-    color:
-      "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20",
+    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20",
     icon: CheckCircle2,
   },
 };
 
-const complexityConfig = {
-  "S": {
-    label: "S",
-    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
+const severityConfig = {
+  P1: {
+    label: "P1",
+    color: "text-rose-400 border-rose-500/20 bg-rose-500/10",
   },
-  "M": {
-    label: "M",
-    color: "text-indigo-400 border-indigo-500/20 bg-indigo-500/10",
-  },
-  "L": {
-    label: "L",
+  P2: {
+    label: "P2",
     color: "text-amber-400 border-amber-500/20 bg-amber-500/10",
   },
-  "XL": {
-    label: "XL",
-    color: "text-rose-400 border-rose-500/20 bg-rose-500/10",
+  P3: {
+    label: "P3",
+    color: "text-indigo-400 border-indigo-500/20 bg-indigo-500/10",
+  },
+  P4: {
+    label: "P4",
+    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
   },
 };
 
-export default function BacklogRow({
+export default function IssueRow({
   item,
   onToggleStatus,
   onEdit,
-  onDelete, 
+  onDelete,
 }) {
   const status = statusConfig[item.status] || statusConfig.planning;
   const StatusIcon = status.icon;
-  const complexity = complexityConfig[item.complexity] || {
-    label: "M",
+  const severity = severityConfig[item.severity] || {
+    label: "P3",
     color: "text-indigo-400 border-indigo-500/20 bg-indigo-500/10",
-  }
-  const criteriaList = (item.acceptance_criteria || "")
+  };
+  const stepsList = (item.reproduction_steps || "")
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
-
 
   return (
     <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-xl hover:shadow-black/40">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="cursor-pointer font-mono text-[11px] font-semibold text-zinc-400 transition-colors hover:text-zinc-200">
-            BACK-{item.id}
+            ISS-{item.id}
           </span>
 
           <span className="select-none text-zinc-700">•</span>
 
-          <span className="wrap-anywhere rounded-md border border-zinc-800 bg-zinc-900/80 px-2 py-0.5 font-mono text-[10px] font-medium text-zinc-400">
-            {item.project}
+          <span className="wrap-anywhere rounded-md border border-zinc-700/40 bg-zinc-800/50 px-2 py-0.5 font-mono text-xs font-medium text-zinc-400">
+            {item.component}
           </span>
 
           <span
-            className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${complexity.color}`}
+            className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${severity.color}`}
           >
-            {complexity.label}
+            {severity.label}
           </span>
         </div>
 
@@ -92,8 +88,8 @@ export default function BacklogRow({
             <div className="flex items-center gap-0.5 rounded-lg border border-zinc-800 bg-zinc-950/80 p-0.5">
               <button
                 onClick={onEdit}
-                title="Edit item"
-                aria-label="Edit item"
+                title="Edit issue"
+                aria-label="Edit issue"
                 className="flex h-6 w-6 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-600"
               >
                 <Pencil size={12} />
@@ -103,8 +99,8 @@ export default function BacklogRow({
 
               <button
                 onClick={onDelete}
-                title="Delete item"
-                aria-label="Delete item"
+                title="Delete issue"
+                aria-label="Delete issue"
                 className="flex h-6 w-6 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-rose-950/60 hover:text-rose-400 focus:outline-none focus:ring-1 focus:ring-rose-500/50"
               >
                 <Trash2 size={12} />
@@ -122,26 +118,23 @@ export default function BacklogRow({
         </div>
       </div>
 
-      <h3 className="wrap-anywhere  mt-3 text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
+      <h3 className="wrap-anywhere mt-3 text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
         {item.title}
       </h3>
 
-      {criteriaList.length > 0 && (
+      {stepsList.length > 0 && (
         <div className="mt-3.5 border-t border-zinc-800/50 pt-3">
           <div className="flex items-center mb-1.5 gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-            <span>Technical Acceptance Criteria</span>
+            <span>Reproduction Steps</span>
           </div>
 
           <ul className="mt-2 space-y-1.5">
-            {criteriaList.map((line, i) => (
+            {stepsList.map((line, i) => (
               <li
                 key={i}
                 className="flex items-start gap-2 text-xs leading-relaxed text-zinc-400"
               >
-                <ChevronRight
-                  size={12}
-                  className="mt-0.5 shrink-0 text-zinc-600"
-                />
+                <ChevronRight size={12} className="mt-0.5 shrink-0 text-zinc-600" />
                 <span className="wrap-anywhere">{line}</span>
               </li>
             ))}

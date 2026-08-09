@@ -16,7 +16,7 @@ export default function AISidebar({ isOpen, onClose, onNavigate }) {
                     <div className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-400" />
                         <h3 className="text-sm font-bold text-zinc-100">
-                            Spec Copilot AI
+                            Sentinel Copilot AI
                         </h3>
                     </div>
 
@@ -30,7 +30,7 @@ export default function AISidebar({ isOpen, onClose, onNavigate }) {
 
                 <div className="space-y-3">
                     <p className="text-xs text-zinc-400">
-                        Select an automated action for your current spec context:
+                        Select an automated action for your current issue context:
                     </p>
 
                     <button
@@ -69,7 +69,7 @@ export default function AISidebar({ isOpen, onClose, onNavigate }) {
 
             <div className="pt-4 border-t border-zinc-800">
                 <p className="text-[10px] text-zinc-500 text-center">
-                    Powered by SpecFlow Fine-Tuned LLM
+                    Powered by Sentinel Fine-Tuned LLM
                 </p>
             </div>
         </aside>

@@ -11,20 +11,20 @@ class User(Base):
 
     theme = Column(String, default="dark")
 
-class Backlog(Base):
+class Issue(Base):
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
 
-    project = Column(String, nullable=False)
+    component = Column(String, nullable=False)
     priority = Column(String, nullable=False)
 
     due_date = Column(Date)
     status = Column(String, nullable=False, default="planning")
     completed = Column(Boolean, nullable=False, default=False)
-    complexity = Column(String, nullable=True, default="M")
-    acceptance_criteria = Column(String, nullable=True)
+    severity = Column(String, nullable=True, default="M")
+    reproduction_steps = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 
     user_id = Column(Integer, ForeignKey("users.id"))
