@@ -1,7 +1,7 @@
 const BASE_URL = "http://127.0.0.1:8000";
 
 export async function getIssues() {
-    const response = await fetch(`${BASE_URL}/tasks/`);
+    const response = await fetch(`${BASE_URL}/issues/`);
     if (!response.ok) {
         throw new Error(`Failed to fetch backlog: ${response.status}`);
     }
@@ -9,7 +9,7 @@ export async function getIssues() {
 }
 
 export async function createIssue(item_data) {
-    const response = await fetch(`${BASE_URL}/tasks/`, {
+    const response = await fetch(`${BASE_URL}/issues/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item_data),
@@ -21,7 +21,7 @@ export async function createIssue(item_data) {
 }
 
 export async function updateIssue(item_id, item_data) {
-    const response = await fetch(`${BASE_URL}/tasks/${item_id}`, {
+    const response = await fetch(`${BASE_URL}/issues/${item_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item_data),
@@ -35,7 +35,7 @@ export async function updateIssue(item_id, item_data) {
 }
 
 export async function deleteIssue(item_id) {
-    const response = await fetch(`${BASE_URL}/tasks/${item_id}`, { 
+    const response = await fetch(`${BASE_URL}/issues/${item_id}`, { 
         method: "DELETE" 
     });
     if (!response.ok) {
