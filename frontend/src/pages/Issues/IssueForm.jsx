@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const emptyForm = {
     title: "",
-    component: "",
+    service: "",
     due_date: "",
     severity: "P3",
     reproduction_steps: "",
@@ -54,13 +54,13 @@ export default function IssueForm({ initialValues, onSubmit, onCancel }) {
 
             <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-400">
-                    Component
+                    Service
                 </label>
                 <input
                     type="text"
                     placeholder="e.g. Checkout flow"
-                    value={formData.component}
-                    onChange={(e) => setFormData({...formData, component: e.target.value,})}
+                    value={formData.service}
+                    onChange={(e) => setFormData({...formData, service: e.target.value,})}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
                 />
             </div>

@@ -46,7 +46,7 @@ export default function Issues() {
       return (
         (item.title || "").toLowerCase().includes(query) ||
         String(item.id).includes(query) ||
-        (item.component || "").toLowerCase().includes(query) ||
+        (item.service || "").toLowerCase().includes(query) ||
         (item.priority || "").toLowerCase().includes(query) ||
         (item.status || "").toLowerCase().includes(query) ||
         (item.severity || "").toLowerCase().includes(query) ||

@@ -42,3 +42,11 @@ export async function deleteIssue(item_id) {
         throw new Error(`Failed to delete item: ${response.status}`);
     }
 }
+
+export async function getServices() {
+    const response = await fetch(`${BASE_URL}/services/`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch services: ${response.status}`);
+    }
+    return response.json();
+}

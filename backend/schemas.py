@@ -33,7 +33,7 @@ class IssueSeverity(str, Enum):
 
 class IssueCreate(BaseModel):
     title: str
-    component: str
+    service: str
     priority: IssuePriority = IssuePriority.medium
     status: IssueStatus = IssueStatus.planning
     due_date: date | None = None
@@ -43,7 +43,7 @@ class IssueCreate(BaseModel):
 
 class IssueUpdate(BaseModel):
     title: str
-    component: str
+    service: str
     priority: str
     status: str
     due_date: date | None
@@ -54,7 +54,7 @@ class IssueUpdate(BaseModel):
 class IssueOut(BaseModel):
     id: int
     title: str
-    component: str
+    service: str
     priority: str
     status: str
     due_date: date | None

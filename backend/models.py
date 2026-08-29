@@ -17,7 +17,7 @@ class Issue(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
 
-    component = Column(String, nullable=False)
+    service = Column(String, nullable=False)
     priority = Column(String, nullable=False)
 
     due_date = Column(Date)

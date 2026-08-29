@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from groq import extract_issue_from_text
+from ai_triage_groq import extract_issue_from_text
 
 router = APIRouter(prefix="/triage", tags=["triage"])
 

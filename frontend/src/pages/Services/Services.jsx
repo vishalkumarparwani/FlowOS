@@ -1,294 +1,129 @@
-import React, { useMemo, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Text, Line } from "@react-three/drei";
+import React, { useEffect, useState } from "react";
+import { getServices } from "../../api";
+import { Search, ChevronRight, AlertTriangle } from "lucide-react";
 
-const SERVICES = [
-  {
-    id: "auth",
-    name: "Authentication",
-    position: [-3, 1.5, 0],
-    issues: 4,
-    risk: 0.25,
-  },
-  {
-    id: "api",
-    name: "Core API",
-    position: [0, 0, 0],
-    issues: 8,
-    risk: 0.7,
-  },
-  {
-    id: "ai",
-    name: "AI Engine",
-    position: [3, 1.5, 0],
-    issues: 6,
-    risk: 0.55,
-  },
-  {
-    id: "database",
-    name: "Database",
-    position: [0, -2.5, 0],
-    issues: 3,
-    risk: 0.2,
-  },
-  {
-    id: "notifications",
-    name: "Notifications",
-    position: [3, -2, 1.5],
-    issues: 5,
-    risk: 0.85,
-  },
-];
-
-const DEPENDENCIES = [
-  ["auth", "api"],
-  ["api", "ai"],
-  ["api", "database"],
-  ["api", "notifications"],
-  ["ai", "database"],
-];
-
-function getService(id) {
-  return SERVICES.find((service) => service.id === id);
-}
-
-function getRiskLabel(risk) {
-  if (risk >= 0.75) return "HIGH";
-  if (risk >= 0.5) return "MEDIUM";
-  return "LOW";
-}
-
-function Serices({ service, selected, onSelect }) {
-  const scale = 0.7 + service.issues * 0.08;
-
-  return (
-    <group
-      position={service.position}
-      onClick={(event) => {
-        event.stopPropagation();
-        onSelect(service);
-      }}
-    >
-      <mesh scale={selected ? scale * 1.2 : scale}>
-        <sphereGeometry args={[0.65, 32, 32]} />
-
-        <meshStandardMaterial
-          color={
-            service.risk >= 0.75
-              ? "#ff1744"
-              : service.risk >= 0.5
-              ? "#ff9800"
-              : "#00e5ff"
-          }
-          emissive={
-            service.risk >= 0.75
-              ? "#ff1744"
-              : service.risk >= 0.5
-              ? "#ff9800"
-              : "#00e5ff"
-          }
-          emissiveIntensity={selected ? 2.5 : 0.8}
-          roughness={0.25}
-          metalness={0.7}
-        />
-      </mesh>
-
-      <Text
-        position={[0, -1.15, 0]}
-        fontSize={0.28}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {service.name}
-      </Text>
-
-      <Text
-        position={[0, 0, 0.72]}
-        fontSize={0.22}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {service.issues} issues
-      </Text>
-    </group>
-  );
-}
-
-function DependencyLines() {
-  return (
-    <>
-      {DEPENDENCIES.map(([sourceId, targetId]) => {
-        const source = getService(sourceId);
-        const target = getService(targetId);
-
-        return (
-          <Line
-            key={`${sourceId}-${targetId}`}
-            points={[source.position, target.position]}
-            color="#64748b"
-            lineWidth={1}
-            transparent
-            opacity={0.55}
-          />
-        );
-      })}
-    </>
-  );
-}
-
-function Scene({ selected, setSelected }) {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-
-      <directionalLight
-        position={[5, 8, 5]}
-        intensity={2}
-      />
-
-      <pointLight
-        position={[0, 0, 5]}
-        intensity={20}
-        distance={15}
-      />
-
-      <DependencyLines />
-
-      {SERVICES.map((service) => (
-        <ServiceNode
-          key={service.id}
-          service={service}
-          selected={selected?.id === service.id}
-          onSelect={setSelected}
-        />
-      ))}
-
-      <gridHelper
-        args={[20, 20, "#334155", "#111827"]}
-        position={[0, -4, 0]}
-      />
-
-      <OrbitControls
-        enableDamping
-        dampingFactor={0.08}
-        minDistance={5}
-        maxDistance={20}
-      />
-    </>
-  );
-}
-
-export default function ServiceMap3D() {
+export default function Services() {
+  const [services, setServices] = useState({});
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getServices();
+        setServices(data);
+      } catch (err) {
+        setError("Failed to load services. Please refresh.");
+      }
+    }
+    fetchData();
+  }, []);
+
+  const serviceNames = Object.keys(services).filter((name) =>
+    name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "650px",
-        position: "relative",
-        background:
-          "radial-gradient(circle at center, #111827 0%, #020617 70%)",
-        borderRadius: "16px",
-        overflow: "hidden",
-      }}
-    >
-      <Canvas
-        camera={{
-          position: [7, 5, 10],
-          fov: 45,
-        }}
-        dpr={[1, 2]}
-      >
-        <Scene
-          selected={selected}
-          setSelected={setSelected}
-        />
-      </Canvas>
+    <div className="mx-auto mt-6 max-w-7xl space-y-8 px-8 xl:px-12">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Services</h1>
+        <p className="mt-1 text-sm text-zinc-400">
+          Services derived from your reported issues, grouped by name.
+        </p>
+      </div>
 
-      {/* Information panel */}
-      {selected && (
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            right: 20,
-            width: 260,
-            padding: 20,
-            borderRadius: 14,
-            background: "rgba(15, 23, 42, 0.92)",
-            border: "1px solid rgba(148, 163, 184, 0.25)",
-            color: "white",
-            backdropFilter: "blur(12px)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 13,
-              color: "#94a3b8",
-              marginBottom: 6,
-            }}
-          >
-            SERVICE
-          </div>
-
-          <h2
-            style={{
-              margin: "0 0 16px",
-              fontSize: 20,
-            }}
-          >
-            {selected.name}
-          </h2>
-
-          <div style={{ marginBottom: 12 }}>
-            <span style={{ color: "#94a3b8" }}>
-              Open issues
-            </span>
-
-            <strong
-              style={{
-                display: "block",
-                fontSize: 24,
-              }}
-            >
-              {selected.issues}
-            </strong>
-          </div>
-
-          <div>
-            <span style={{ color: "#94a3b8" }}>
-              Risk
-            </span>
-
-            <strong
-              style={{
-                display: "block",
-                fontSize: 18,
-              }}
-            >
-              {getRiskLabel(selected.risk)}
-            </strong>
-          </div>
+      {error && (
+        <div className="rounded-lg border border-rose-900/40 bg-rose-950/20 px-4 py-2.5 text-xs text-rose-400">
+          {error}
         </div>
       )}
 
-      {!selected && (
+      <div className="relative w-full sm:w-80">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+        <input
+          type="text"
+          placeholder="Search services..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full rounded-lg border border-zinc-800/80 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-zinc-200 placeholder-zinc-500 outline-none transition-all focus:border-zinc-700"
+        />
+      </div>
+
+      <div className="space-y-3">
+        {serviceNames.length === 0 ? (
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 py-12 text-center text-sm text-zinc-500">
+            No services found.
+          </div>
+        ) : (
+          serviceNames.map((name) => {
+            const issues = services[name];
+            const critical = issues.filter((i) => i.severity === "P1").length;
+            const open = issues.filter((i) => i.status !== "done").length;
+
+            return (
+              <button
+                key={name}
+                onClick={() => setSelected(name)}
+                className="w-full flex items-center justify-between gap-3 rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 text-left transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900/90"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-sm font-semibold text-zinc-100">
+                    {name}
+                  </span>
+                  {critical > 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-md border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-400">
+                      <AlertTriangle size={10} />
+                      {critical} critical
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 text-xs text-zinc-400">
+                  <span>{open} open</span>
+                  <ChevronRight size={14} className="text-zinc-600" />
+                </div>
+              </button>
+            );
+          })
+        )}
+      </div>
+
+      {selected !== null && (
         <div
-          style={{
-            position: "absolute",
-            top: 20,
-            left: 20,
-            padding: "10px 14px",
-            borderRadius: 10,
-            background: "rgba(15, 23, 42, 0.8)",
-            color: "#cbd5e1",
-            fontSize: 13,
-          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+          onClick={() => setSelected(null)}
         >
-          Click a service to inspect it
+          <div
+            className="w-full max-w-lg rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <h2 className="font-mono text-lg font-semibold text-zinc-100">
+                {selected}
+              </h2>
+              <button
+                onClick={() => setSelected(null)}
+                className="text-zinc-500 hover:text-zinc-200 text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+
+            <ul className="mt-5 space-y-2">
+              {services[selected].map((issue) => (
+                <li
+                  key={issue.id}
+                  className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2"
+                >
+                  <span className="text-sm text-zinc-200">{issue.title}</span>
+                  <span className="font-mono text-[10px] font-bold text-zinc-500">
+                    {issue.severity}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>
