@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import date, datetime
 from enum import Enum
 
+
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -14,12 +15,23 @@ class UserOut(BaseModel):
     class Config:
         from_attributes = True
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserOut
+
 class UserThemeUpdate(BaseModel):
     theme: str
+
 class IssueStatus(str, Enum):
     planning = "planning"
     in_progress = "in_progress"
     done = "done"
+
 class IssuePriority(str, Enum):
     high = "High"
     medium = "Medium"

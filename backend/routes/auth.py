@@ -1,32 +1,36 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from database import get_db
 from models import User
-from schemas import UserCreate
+from schemas import UserCreate, UserLogin, Token
 from auth import hash_password, verify_password, create_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.post("/register")
+@router.post("/register", response_model=Token, status_code=201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.username == user.username).first()
+    if db.query(User).filter(User.email == user.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
 
-    if existing:
-        raise HTTPException(status_code=400, detail="...Seems like the username is not available")
+    new_user = User(email=user.email, hashed_password=hash_password(user.password))
 
-    new_user = User(username=user.username, hashed_password=hash_password(user.password))
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create account")
 
-    db.add((new_user))
-    db.commit()
-    db.refresh(new_user)
-    return {"id": new_user.id, "username": new_user.username}
+    token = create_token({"sub": str(new_user.id)})
+    return {"access_token": token, "token_type": "bearer", "user": new_user}
 
-@router.post("/login")
-def login(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.username == user.username).first()
-
-    if not db_user or not verify_password(user.password, db_user.hashed_password):
+@router.post("/login", response_model=Token)
+def login(credentials: UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == credentials.email).first()
+    if not db_user or not verify_password(credentials.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_token({"sub": db_user.username})
-    return {"access_token": token, "token_type": "bearer"}
+    token = create_token({"sub": str(db_user.id)})
+    return {"access_token": token, "token_type": "bearer", "user": db_user}

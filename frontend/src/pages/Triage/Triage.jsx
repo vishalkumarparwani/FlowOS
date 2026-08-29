@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { createIssue, runTriage } from "../../api";
 import {
@@ -18,6 +19,8 @@ export default function Triage() {
   const [issue, setIssue] = useState(null);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   async function handleRunTriage() {
     if (!text.trim()) return;
@@ -46,22 +49,22 @@ export default function Triage() {
   }
 
   async function handleCreateIssue() {
-    try {
-      await createIssue(issue);
-      setSaved(true);
-    } catch (err) {
-      console.error("Create failed:", err);
-      setError("Failed to save issue. Please try again.");
-    }
+  try {
+    await createIssue(issue);
+    setSaved(true);
+  } catch (err) {
+    console.error("Create failed:", err);
+    setError("Failed to save issue. Please try again.");
   }
+}
 
   const noIssueFound = issue?.title === "No issue reported";
 
   const steps = Array.isArray(issue?.reproduction_steps)
     ? issue.reproduction_steps
     : typeof issue?.reproduction_steps === "string"
-    ? issue.reproduction_steps.split("\n").filter(Boolean)
-    : [];
+      ? issue.reproduction_steps.split("\n").filter(Boolean)
+      : [];
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -116,9 +119,8 @@ export default function Triage() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-100 text-zinc-950 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed text-xs font-semibold transition-all cursor-pointer shadow-sm"
             >
               <Sparkles
-                className={`w-4 h-4 text-amber-500 ${
-                  loading ? "animate-spin" : "fill-amber-500"
-                }`}
+                className={`w-4 h-4 text-amber-500 ${loading ? "animate-spin" : "fill-amber-500"
+                  }`}
               />
               <span>{loading ? "Parsing Log..." : "Run AI Triage"}</span>
             </button>
@@ -241,22 +243,24 @@ export default function Triage() {
             )}
           </div>
 
-          {/* Action Footer */}
           {issue && !loading && !noIssueFound && (
             <div className="pt-4 mt-6 border-t border-zinc-800/80 flex items-center justify-between">
-              <span className="text-[11px] text-zinc-500">
-                Action: Creates entry in <code className="text-zinc-400">/issues/</code>
+              <span
+                onClick={() => navigate("/issues")}
+                className="flex items-center gap-1 text-[11px] text-zinc-500 cursor-pointer hover:text-zinc-300"
+              >
+                Issue created successfully →
+                <span className="font-medium">View Issues</span>
               </span>
 
               <button
                 type="button"
                 onClick={handleCreateIssue}
                 disabled={saved}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  saved
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${saved
                     ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                     : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm"
-                }`}
+                  }`}
               >
                 {saved ? (
                   <>

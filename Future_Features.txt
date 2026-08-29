@@ -1,3 +1,23 @@
+python backend/ai_triage_groq.py
+qwen/qwen3.6-27b
+qwen/qwen3.8-27b
+canopylabs/orpheus-v1-english
+canopylabs/orpheus-arabic-saudi
+openai/gpt-oss-20b
+meta-llama/llama-prompt-guard-2-22m
+allam-2-7b
+openai/gpt-oss-safeguard-20b
+groq/compound-mini
+openai/gpt-oss-120b
+meta-llama/llama-prompt-guard-2-86m
+whisper-large-v3-turbo
+groq/compound
+whisper-large-v3
+
+
+
+
+
 1-Role personalization -> {
     
 Startup Founder

@@ -62,3 +62,29 @@ export async function runTriage(rawText) {
     }
     return response.json();
 }
+
+export async function loginUser(email, password) {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+    });
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.detail || `Login failed: ${response.status}`);
+    }
+    return response.json();
+}
+
+export async function registerUser(email, password) {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+    });
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.detail || `Registration failed: ${response.status}`);
+    }
+    return response.json();
+}
