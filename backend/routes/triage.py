@@ -11,5 +11,6 @@ class TriageRequest(BaseModel):
 def run_triage(request: TriageRequest):
     try:
         return extract_issue_from_text(request.raw_text)
-    except Exception:
+    except Exception as error:
+        print("AI TRIAGE ERROR:", error)
         raise HTTPException(status_code=500, detail="AI triage failed. Please try again.")

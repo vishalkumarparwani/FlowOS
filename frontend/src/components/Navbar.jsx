@@ -28,7 +28,7 @@ export default function Navbar({
           className="flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/60 text-zinc-200 text-xs px-3 py-1.5 rounded-lg transition-colors"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Sentinel Copilot</span>
+          <span className="hidden sm:inline">Contexture Copilot</span>
         </button>
 
         <UserMenu />

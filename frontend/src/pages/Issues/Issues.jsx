@@ -1,3 +1,4 @@
+import { useAsyncValue, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import IssueForm from "./IssueForm";
 import IssueRow from "./IssueRow";
@@ -17,6 +18,35 @@ export default function Issues() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+
+
+  // issue row highlight
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [highlightedId, setHighlightedId] = useState(
+    location.state?.highlightId || null
+  )
+  
+  useEffect(() => {
+    if(!location.state?.highlightId) return;
+
+    navigate(location.pathname, {
+      replace: true,
+      state: {},
+    });
+  }, []);
+
+  useEffect(() => {
+    if(highlightedId === null) return;
+
+    const timer = setTimeout(() => {
+      setHighlightedId(null);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [highlightedId]);
+
+
 
   useEffect(() => {
     async function fetchData() {
@@ -181,6 +211,7 @@ export default function Issues() {
               <IssueRow
                 key={item.id}
                 item={item}
+                isHighlighted={item.id === highlightedId}
                 onEdit={() => setEditingItem(item)}
                 onToggleStatus={() => handleToggleStatus(item)}
                 onDelete={() => handleDeleteIssue(item.id)}

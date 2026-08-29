@@ -11,17 +11,17 @@ import {
 const statusConfig = {
   planning: {
     label: "Planning",
-    color: "text-zinc-300 border-zinc-700/60 bg-zinc-800/40",
+    color: "text-zinc-300 border-zinc-700/60 bg-zinc-800/40 hover:bg-zinc-800/80",
     icon: CircleDot,
   },
   in_progress: {
     label: "In Progress",
-    color: "text-amber-400 border-amber-500/20 bg-amber-500/10",
+    color: "text-amber-400 border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20",
     icon: Clock,
   },
   done: {
     label: "Done",
-    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
+    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20",
     icon: CheckCircle2,
   },
 };
@@ -47,7 +47,8 @@ const severityConfig = {
 
 export default function IssueRow({
   item,
-  onStatusChange,
+  isHighlighted,
+  onToggleStatus,
   onEdit,
   onDelete,
 }) {
@@ -63,7 +64,11 @@ export default function IssueRow({
     .filter(Boolean);
 
   return (
-    <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-xl hover:shadow-black/40">
+    <div className={`group relative rounded-xl border p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] transition-all duration-300 hover:shadow-xl hover:shadow-black/40 ${
+      isHighlighted
+        ? "border-amber-500/60 bg-amber-500/10 ring-1 ring-amber-500/40"
+        : "border-zinc-800/80 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900/90"
+    }`}>
       <div className="flex items-start justify-between gap-3">
         <h3 className="wrap-anywhere text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
           {item.title}
@@ -94,18 +99,13 @@ export default function IssueRow({
             </div>
           </div>
 
-          <div className="relative">
-            <select
-              value={item.status}
-              onChange={(e) => onStatusChange(e.target.value)}
-              className={`appearance-none cursor-pointer flex shrink-0 items-center gap-1.5 rounded-md border pl-6 pr-2 py-1 font-mono text-[10px] font-medium transition-all focus:outline-none ${status.color}`}
-            >
-              <option value="planning">Planning</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
-            <StatusIcon size={11} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2" />
-          </div>
+          <button
+            onClick={onToggleStatus}
+            className={`flex shrink-0 items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10px] font-medium transition-all ${status.color}`}
+          >
+            <StatusIcon size={11} />
+            {status.label}
+          </button>
         </div>
       </div>
 

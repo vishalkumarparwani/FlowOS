@@ -50,3 +50,15 @@ export async function getServices() {
     }
     return response.json();
 }
+
+export async function runTriage(rawText) {
+    const response = await fetch(`${BASE_URL}/triage/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", },
+        body: JSON.stringify({ raw_text: rawText, }),
+    });
+    if(!response.ok) {
+        throw new Error(`AI triage failed: ${response.status}`);
+    }
+    return response.json();
+}

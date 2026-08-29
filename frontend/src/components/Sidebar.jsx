@@ -54,7 +54,7 @@ export default function Sidebar(props) {
               </div>
               <div className="overflow-hidden">
                 <h2 className="text-sm font-bold text-zinc-100 tracking-tight truncate">
-                    Sentinel
+                    Contexture
                 </h2>
                 <p className="text-[10px] text-zinc-500 font-mono truncate">
                   SERVICE-TO-ISSUE v2.2
