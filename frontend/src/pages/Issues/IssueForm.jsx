@@ -90,7 +90,7 @@ export default function IssueForm({ initialValues, onSubmit, onCancel }) {
                         type="date"
                         value={formData.due_date}
                         onChange={(e) => setFormData({ ...formData, due_date: e.target.value, })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600 [color-scheme:dark]"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-600 scheme-dark"
                     />
                 </div>
             </div>
