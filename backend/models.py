@@ -23,7 +23,7 @@ class Issue(Base):
     due_date = Column(Date)
     status = Column(String, nullable=False, default="planning")
     completed = Column(Boolean, nullable=False, default=False)
-    severity = Column(String, nullable=True, default="M")
+    severity = Column(String, nullable=True, default="P3")
     reproduction_steps = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
 

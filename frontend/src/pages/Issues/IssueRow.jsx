@@ -9,19 +9,19 @@ import {
 } from "lucide-react";
 
 const statusConfig = {
-  in_progress: {
-    label: "In Progress",
-    color: "text-amber-400 border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20",
-    icon: Clock,
-  },
   planning: {
     label: "Planning",
-    color: "text-zinc-300 border-zinc-700/60 bg-zinc-800/40 hover:bg-zinc-800/80",
+    color: "text-zinc-300 border-zinc-700/60 bg-zinc-800/40",
     icon: CircleDot,
+  },
+  in_progress: {
+    label: "In Progress",
+    color: "text-amber-400 border-amber-500/20 bg-amber-500/10",
+    icon: Clock,
   },
   done: {
     label: "Done",
-    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20",
+    color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
     icon: CheckCircle2,
   },
 };
@@ -47,7 +47,7 @@ const severityConfig = {
 
 export default function IssueRow({
   item,
-  onToggleStatus,
+  onStatusChange,
   onEdit,
   onDelete,
 }) {
@@ -64,26 +64,12 @@ export default function IssueRow({
 
   return (
     <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)] transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-xl hover:shadow-black/40">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="cursor-pointer font-mono text-[11px] font-semibold text-zinc-400 transition-colors hover:text-zinc-200">
-            ISS-{item.id}
-          </span>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="wrap-anywhere text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
+          {item.title}
+        </h3>
 
-          <span className="select-none text-zinc-700">•</span>
-
-          <span className="wrap-anywhere rounded-md border border-zinc-700/40 bg-zinc-800/50 px-2 py-0.5 font-mono text-xs font-medium text-zinc-400">
-            {item.component}
-          </span>
-
-          <span
-            className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${severity.color}`}
-          >
-            {severity.label}
-          </span>
-        </div>
-
-        <div className="flex items-center">
+        <div className="flex items-center shrink-0">
           <div className="flex max-w-0 items-center overflow-hidden opacity-0 transition-all duration-200 ease-in-out group-hover:mr-2 group-hover:max-w-xs group-hover:opacity-100 focus-within:mr-2 focus-within:max-w-xs focus-within:opacity-100">
             <div className="flex items-center gap-0.5 rounded-lg border border-zinc-800 bg-zinc-950/80 p-0.5">
               <button
@@ -108,19 +94,40 @@ export default function IssueRow({
             </div>
           </div>
 
-          <button
-            onClick={onToggleStatus}
-            className={`flex shrink-0 items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10px] font-medium transition-all ${status.color}`}
-          >
-            <StatusIcon size={11} />
-            {status.label}
-          </button>
+          <div className="relative">
+            <select
+              value={item.status}
+              onChange={(e) => onStatusChange(e.target.value)}
+              className={`appearance-none cursor-pointer flex shrink-0 items-center gap-1.5 rounded-md border pl-6 pr-2 py-1 font-mono text-[10px] font-medium transition-all focus:outline-none ${status.color}`}
+            >
+              <option value="planning">Planning</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+            <StatusIcon size={11} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2" />
+          </div>
         </div>
       </div>
 
-      <h3 className="wrap-anywhere mt-3 text-base text-[14px] font-semibold leading-snug tracking-tight text-zinc-100">
-        {item.title}
-      </h3>
+      <div className="mt-2 flex items-center gap-2">
+        <span className="cursor-pointer font-mono text-[11px] font-semibold text-zinc-400 transition-colors hover:text-zinc-200">
+          ISS-{item.id}
+        </span>
+
+        <span className="select-none text-zinc-700">•</span>
+
+        {item.service && (
+          <span className="wrap-anywhere rounded-md border border-zinc-700/40 bg-zinc-800/50 px-2 py-0.5 font-mono text-xs font-medium text-zinc-400">
+            {item.service}
+          </span>
+        )}
+
+        <span
+          className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${severity.color}`}
+        >
+          {severity.label}
+        </span>
+      </div>
 
       {stepsList.length > 0 && (
         <div className="mt-3.5 border-t border-zinc-800/50 pt-3">

@@ -36,11 +36,11 @@ def create_issue(new_issue: IssueCreate, db: Session = Depends(get_db)):
         reproduction_steps=new_issue.reproduction_steps,
     )
     try:
-
         db.add(db_issue)
         db.commit()
         db.refresh(db_issue)
     except SQLAlchemyError:
+        db.rollback()
         raise HTTPException(status_code=500, detail="Failed to save issue")
     return db_issue
 
@@ -73,5 +73,5 @@ def delete_issue(issue_id: int, db: Session = Depends(get_db)):
         db.delete(db_issue)
         db.commit()
     except SQLAlchemyError:
-        db.rollback() #undoes uncommitted changes
+        db.rollback()
         raise HTTPException(status_code=500, detail="Failed to delete issue")
