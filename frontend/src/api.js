@@ -88,3 +88,18 @@ export async function registerUser(email, password) {
     }
     return response.json();
 }
+
+export async function updateTheme(theme, token) {
+    const response = await fetch(`${BASE_URL}/users/theme`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ theme }),
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to update theme: ${response.status}`);
+    }
+    return response.json();
+}

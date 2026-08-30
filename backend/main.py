@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from database import Base, engine
-from routes import issues, services, triage, auth
+from routes import issues, services, triage, auth, users
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +27,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 
 app.include_router(auth.router)
+app.include_router(users.router)
 # app.include_router(dashboard.router)
 app.include_router(issues.router)
 app.include_router(services.router)

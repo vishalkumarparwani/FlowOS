@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
+import { updateTheme } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -24,8 +25,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const setTheme = async (theme) => {
+    const updatedUser = await updateTheme(theme, token);
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, setTheme }}>
       {children}
     </AuthContext.Provider>
   );

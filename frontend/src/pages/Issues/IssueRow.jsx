@@ -6,6 +6,7 @@ import {
   Trash2,
   Pencil,
   ChevronRight,
+  Calendar,
 } from "lucide-react";
 
 const statusConfig = {
@@ -109,7 +110,7 @@ export default function IssueRow({
         </div>
       </div>
 
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
         <span className="cursor-pointer font-mono text-[11px] font-semibold text-zinc-400 transition-colors hover:text-zinc-200">
           ISS-{item.id}
         </span>
@@ -127,6 +128,13 @@ export default function IssueRow({
         >
           {severity.label}
         </span>
+
+        {item.due_date && (
+          <span className="inline-flex items-center gap-1 rounded-md border border-zinc-700/40 bg-zinc-800/50 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+            <Calendar size={10} />
+            {item.due_date}
+          </span>
+        )}
       </div>
 
       {stepsList.length > 0 && (
