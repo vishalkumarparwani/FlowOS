@@ -6,6 +6,7 @@ export default function Pomodoro() {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(0);
+  const [goal, setGoal] = useState("");
 
   function handleStart() {
     setIsRunning(true);
@@ -39,6 +40,10 @@ export default function Pomodoro() {
     return () => clearInterval(timer);
   }, [isRunning, minutes, seconds]);
 
+  const totalFocusMinutes = completedSessions * 25;
+  const focusHours = Math.floor(totalFocusMinutes / 60);
+  const focusMinutesRemainder = totalFocusMinutes % 60;
+
   return (
     <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6">
       <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
@@ -59,9 +64,13 @@ export default function Pomodoro() {
           {minutes}:{seconds.toString().padStart(2, "0")}
         </h2>
 
-        <p className="mt-3 text-xs text-zinc-500">
-          Finish your current implementation before switching context.
-        </p>
+        <input
+          type="text"
+          value={goal}
+          onChange={(e) => setGoal(e.target.value)}
+          placeholder="What are you focusing on?"
+          className="mt-3 w-full bg-transparent text-center text-xs text-zinc-400 placeholder-zinc-600 focus:outline-none"
+        />
 
         <div className="mt-8 flex gap-3">
           <button
@@ -108,16 +117,18 @@ export default function Pomodoro() {
         <div className="flex items-center justify-between">
           <span className="text-xs text-zinc-500">Today's Focus Time</span>
           <span className="text-sm font-semibold text-zinc-100">
-            1h 15m
+            {focusHours}h {focusMinutesRemainder}m
           </span>
         </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-zinc-500">Current Goal</span>
-          <span className="text-xs font-medium text-indigo-300">
-            Finish API Design
-          </span>
-        </div>
+        {goal && (
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-zinc-500">Current Goal</span>
+            <span className="text-xs font-medium text-indigo-300 truncate max-w-140px">
+              {goal}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

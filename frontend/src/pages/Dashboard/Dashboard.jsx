@@ -1,79 +1,82 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { getIssues } from "../../api";
 import DashboardCard from "./DashboardCard";
-import UpcomingTasks from "./UpcomingTasks";
+import UpcomingIssueCard from "./UpcomingIssues";
 import Pomodoro from "./Pomodoro";
 
 import {
-  Wand2,
+  AlertTriangle,
   GitBranch,
-  BrainCircuit,
+  Boxes,
   Clock3,
   ArrowUpRight,
   Plus,
+  BrainCircuit,
 } from "lucide-react";
 
 export default function Dashboard() {
+  const [issues, setIssues] = useState([]);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getIssues();
+        setIssues(data);
+      } catch (err) {
+        setError("Failed to load dashboard data.");
+      }
+    }
+    fetchData();
+  }, []);
+
+  const openIssues = issues.filter((i) => i.status !== "done");
+  const criticalIssues = issues.filter(
+    (i) => i.severity === "P1" && i.status !== "done"
+  );
+  const servicesAffected = new Set(issues.map((i) => i.service)).size;
+
   const stats = [
     {
-      title: "Spec-to-Code Speed",
-      value: "4.2 Days",
-      description: "-35% vs previous sprint",
-      icon: Clock3,
-      iconStyle: "text-emerald-400 bg-emerald-950/50",
-    },
-    {
-      title: "AI Backlog Precision",
-      value: "94.8%",
-      description: "Acceptance criteria accuracy",
-      icon: BrainCircuit,
-      iconStyle: "text-violet-400 bg-violet-950/50",
-    },
-    {
-      title: "Active Roadmaps",
-      value: "8",
-      description: "124 engineering tasks",
+      title: "Total Issues",
+      value: issues.length,
+      description: `${issues.length} tracked overall`,
       icon: GitBranch,
       iconStyle: "text-sky-400 bg-sky-950/50",
     },
     {
-      title: "Time Saved / Sprint",
-      value: "38.5h",
-      description: "+6.4h compared to last sprint",
-      icon: Wand2,
+      title: "Critical Issues",
+      value: criticalIssues.length,
+      description: "Needing immediate attention",
+      icon: AlertTriangle,
+      iconStyle: "text-rose-400 bg-rose-950/50",
+    },
+    {
+      title: "Open Issues",
+      value: openIssues.length,
+      description: "Not yet resolved",
+      icon: Clock3,
       iconStyle: "text-amber-400 bg-amber-950/50",
+    },
+    {
+      title: "Services Affected",
+      value: servicesAffected,
+      description: "Distinct services with issues",
+      icon: Boxes,
+      iconStyle: "text-violet-400 bg-violet-950/50",
     },
   ];
 
-  const recentTasks = [
-    {
-      id: 1,
-      title: "Authentication & Session Service",
-      projects: "Identity Platform",
-      done: false,
-      priority: "High",
-    },
-    {
-      id: 2,
-      title: "Stripe Billing Integration",
-      projects: "Payments",
-      done: false,
-      priority: "Medium",
-    },
-    {
-      id: 3,
-      title: "Vector Search API",
-      projects: "Knowledge Engine",
-      done: true,
-      priority: "High",
-    },
-    {
-      id: 4,
-      title: "Notification Worker",
-      projects: "Infrastructure",
-      done: false,
-      priority: "Low",
-    },
-  ];
+  const recentIssues = issues.slice(0, 4);
+
+  const insightText =
+    criticalIssues.length > 0
+      ? `${criticalIssues.length} critical issue${
+          criticalIssues.length > 1 ? "s" : ""
+        } need attention. Check the Issues page to triage them.`
+      : "No critical issues right now. Everything looks stable.";
 
   return (
     <div className="mx-auto mt-6 max-w-7xl space-y-8 px-8 xl:px-12">
@@ -84,17 +87,25 @@ export default function Dashboard() {
           </h1>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-            Monitor AI-assisted software delivery, engineering throughput,
-            backlog health, and overall platform performance across every
-            product initiative.
+            Monitor issue health, service risk, and engineering throughput
+            across your product.
           </p>
         </div>
 
-        <button className="flex items-center gap-2 rounded-xl bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200">
+        <button
+          onClick={() => navigate("/issues")}
+          className="flex items-center gap-2 rounded-xl bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+        >
           <Plus size={16} />
-          Generate New Spec
+          Report New Issue
         </button>
       </div>
+
+      {error && (
+        <div className="rounded-lg border border-rose-900/40 bg-rose-950/20 px-4 py-2.5 text-xs text-rose-400">
+          {error}
+        </div>
+      )}
 
       <div className="flex items-start gap-4 rounded-2xl border border-indigo-900/40 bg-linear-to-r from-indigo-950/40 via-zinc-900 to-zinc-900 p-6">
         <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
@@ -103,15 +114,11 @@ export default function Dashboard() {
 
         <div className="flex-1">
           <h3 className="font-semibold text-indigo-200">
-            AI Engineering Recommendation
+            Engineering Insight
           </h3>
 
           <p className="mt-1 text-sm leading-6 text-zinc-400">
-            Three specifications are awaiting decomposition. Generating them
-            now could save approximately{" "}
-            <span className="font-semibold text-zinc-200">6.4 engineering hours</span>{" "}
-            during the current sprint while maintaining a 95% acceptance
-            criteria accuracy rate.
+            {insightText}
           </p>
         </div>
       </div>
@@ -134,31 +141,33 @@ export default function Dashboard() {
           <div className="flex items-center justify-between border-b border-zinc-800 pb-5">
             <div>
               <h3 className="text-lg font-semibold text-zinc-100">
-                Active Engineering Backlog
+                Recent Issues
               </h3>
 
               <p className="mt-1 text-xs text-zinc-500">
-                Highest-priority specifications currently assigned to the
-                engineering pipeline.
+                Highest-severity issues currently open across your services.
               </p>
             </div>
 
-            <button className="flex items-center gap-1 text-xs font-medium text-zinc-500 transition hover:text-zinc-200">
+            <Link
+              to="/issues"
+              className="flex items-center gap-1 text-xs font-medium text-zinc-500 transition hover:text-zinc-200"
+            >
               View all
               <ArrowUpRight size={13} />
-            </button>
+            </Link>
           </div>
 
           <div className="mt-5 space-y-1 divide-y divide-zinc-800/60">
-            {recentTasks.map((task) => (
-              <UpcomingTasks
-                key={task.id}
-                title={task.title}
-                projects={task.projects}
-                done={task.done}
-                priority={task.priority}
-              />
-            ))}
+            {recentIssues.length === 0 ? (
+              <p className="py-6 text-center text-sm text-zinc-500">
+                No issues reported yet.
+              </p>
+            ) : (
+              recentIssues.map((issue) => (
+                <UpcomingIssueCard key={issue.id} issue={issue} />
+              ))
+            )}
           </div>
         </div>
 

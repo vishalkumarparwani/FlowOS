@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from database import get_db
 from models import User
 from schemas import UserOut, UserThemeUpdate
-from auth import get_current_user
+from routes.auth import get_current_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 

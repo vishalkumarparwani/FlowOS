@@ -26,7 +26,7 @@ export default function Settings() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
         <h1 className="text-xl font-bold tracking-tight text-zinc-100">
-          Sentinel Settings
+          Contexture Settings
         </h1>
         <p className="text-xs text-zinc-400 mt-1">
           Manage your account and workspace preferences.
@@ -46,7 +46,7 @@ export default function Settings() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-zinc-100">Account</h2>
-            <p className="text-xs text-zinc-500">Your Sentinel login</p>
+            <p className="text-xs text-zinc-500">Your Contexture login</p>
           </div>
         </div>
 

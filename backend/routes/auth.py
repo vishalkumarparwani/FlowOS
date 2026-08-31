@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from database import get_db
 from models import User
 from schemas import UserCreate, UserLogin, Token
-from auth import hash_password, verify_password, create_token
+from auth import hash_password, verify_password, create_token, decode_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 @router.post("/register", response_model=Token, status_code=201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -34,3 +36,18 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
 
     token = create_token({"sub": str(db_user.id)})
     return {"access_token": token, "token_type": "bearer", "user": db_user}
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+    credentials_exception = HTTPException(status_code=401, detail="Could not validate credentials")
+    try:
+        payload = decode_token(token)
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+    except Exception:
+        raise credentials_exception
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if user is None:
+        raise credentials_exception
+    return user
