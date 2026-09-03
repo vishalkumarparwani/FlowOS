@@ -11,7 +11,7 @@ export default function UserMenu() {
         <div className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
           <User className="w-4 h-4" />
         </div>
-        <span className="text-xs font-medium text-zinc-300">Alex (Tech Lead)</span>
+        <span className="text-xs font-medium text-zinc-300">Me (Tech Lead)</span>
       </div>
     </div>
   );
